@@ -1,0 +1,34 @@
+# 디폴트 무시된 파일
+/shelf/
+/workspace.xml
+# 에디터 기반 HTTP 클라이언트 요청
+/httpRequests/
+
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Terraform local artifacts
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Sensitive variable files
+*.tfvars
+*.auto.tfvars
+
+# Crash logs
+crash.log
+
+# IDE stuff
+.idea/
+.vscode/
+*.iml
+
+# system
+.DS_Store
