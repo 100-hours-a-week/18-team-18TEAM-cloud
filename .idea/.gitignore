@@ -33,3 +33,8 @@
 
 # System
 .DS_Store
+
+# secret
+**/sensitive.auto.tfvars
+*.secret.auto.tfvars
+*.local.auto.tfvars
