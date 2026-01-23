@@ -7,28 +7,29 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
 # Terraform local artifacts
-.terraform/
-terraform.tfstate
-terraform.tfstate.backup
+**/.terraform/
+**/terraform.tfstate
+**/terraform.tfstate.backup
 
 # Terraform overrides
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
+**/override.tf
+**/override.tf.json
+**/*_override.tf
+**/*_override.tf.json
 
 # Sensitive variable files
-*.tfvars
-*.auto.tfvars
+**/*.tfvars
+**/*.auto.tfvars
 
 # Crash logs
-crash.log
+**/crash.log
 
-# IDE stuff
+# IDE
 .idea/
 .vscode/
 *.iml
 
-# system
+# System
 .DS_Store
