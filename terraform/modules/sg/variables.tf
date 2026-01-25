@@ -14,7 +14,7 @@ variable "vpc_id" {
 }
 
 variable "ingress_rules" {
-  description = "List of ingress rules"
+  description = "list of ingress rules"
   type = list(object({
     description      = optional(string)
     from_port        = number
@@ -28,7 +28,7 @@ variable "ingress_rules" {
 }
 
 variable "egress_rules" {
-  description = "List of egress rules"
+  description = "list of egress rules"
   type = list(object({
     description      = optional(string)
     from_port        = number
@@ -38,10 +38,10 @@ variable "egress_rules" {
     ipv6_cidr_blocks = optional(list(string), [])
     security_groups  = optional(list(string), [])
   }))
-  # 기본값: 모든 곳으로 아웃바운드 허용
+
   default = [
     {
-      description      = "Allow all outbound"
+      description      = "allow all outbound"
       from_port        = 0
       to_port          = 0
       protocol         = "-1"
@@ -53,7 +53,7 @@ variable "egress_rules" {
 }
 
 variable "tags" {
-  description = "Additional tags to apply"
+  description = "additional tags to apply"
   type        = map(string)
   default     = {}
 }

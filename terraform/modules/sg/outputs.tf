@@ -1,14 +1,14 @@
 output "id" {
-  description = "Security Group ID"
+  description = "security group id"
   value       = aws_security_group.this.id
 }
 
 output "arn" {
-  description = "Security Group ARN"
+  description = "security group arn"
   value       = aws_security_group.this.arn
 }
 
 output "name" {
-  description = "Security Group name"
+  description = "security group name"
   value       = aws_security_group.this.name
 }
