@@ -48,8 +48,8 @@ variable "key_name" {
   default = null
 
   validation {
-    condition     = var.enable_ssm || (var.key_name != null && length(trim(var.key_name)) > 0)
-    error_message = "enable_ssm=false(SSH 사용)인 경우 key_name은 필수입니다."
+    condition     = var.enable_ssm || (var.key_name != null && length(trimspace(var.key_name)) > 0)
+    error_message = "Either enable_ssm must be true, or key_name must be non-empty."
   }
 }
 
@@ -71,8 +71,8 @@ variable "iam_instance_profile_name" {
   default = null
 
   validation {
-    condition     = var.create_instance_profile || (var.iam_instance_profile_name != null && length(trim(var.iam_instance_profile_name)) > 0)
-    error_message = "create_instance_profile=false이면 iam_instance_profile_name을 반드시 지정해야 합니다."
+    condition     = var.create_instance_profile || (var.iam_instance_profile_name != null && length(trimspace(var.iam_instance_profile_name)) > 0)
+    error_message = "Either create_instance_profile must be true, or iam_instance_profile_name must be non-empty."
   }
 }
 

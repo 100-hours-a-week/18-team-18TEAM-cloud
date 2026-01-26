@@ -9,16 +9,16 @@ module "ssh" {
     ingress_rules = [
         {
         description = "allow ssh from specific ip"
-        from_port   = 22
-        to_port     = 22
+        from_port   = var.ssh_port
+        to_port     = var.ssh_port
         protocol    = "tcp"
         cidr_blocks = var.allowed_ssh_ips
         },
     ]
 
     tags = {
-        Project = "bizkit"
-        Env     = "prod"
+        Project = var.project
+        Env     = var.env
         Tier    = "edge"
     }
 }
@@ -28,30 +28,30 @@ module "webserver" {
     source = "../../modules/sg"
 
     name        = "bizkit-prod-webserver-sg"
-    description = "allow http/https request from anywhere"
+    description = "allow http/https from anywhere"
 
     vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
     ingress_rules = [
         {
         description = "allow HTTP from anywhere"
-        from_port   = 80
-        to_port     = 80
+        from_port   = var.http_port
+        to_port     = var.http_port
         protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+        cidr_blocks = [ var.public_cidr ]
         },
         {
         description = "allow HTTPs from anywhere"
-        from_port   = 443
-        to_port     = 443
+        from_port   = var.https_port
+        to_port     = var.https_port
         protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+        cidr_blocks = [ var.public_cidr ]
         }
     ]
 
     tags = {
-        Project = "bizkit"
-        Env     = "prod"
+       Project = var.project
+        Env     = var.env
         Tier    = "edge"
     }
 }

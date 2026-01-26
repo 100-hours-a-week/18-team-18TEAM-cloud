@@ -57,9 +57,9 @@ resource "aws_instance" "this" {
   key_name                    = var.key_name
   associate_public_ip_address = var.associate_public_ip_address
 
-  iam_instance_profile = var.create_instance_profile
+  iam_instance_profile = (var.create_instance_profile 
     ? aws_iam_instance_profile.instance_profile[0].name
-    : var.iam_instance_profile_name
+    : var.iam_instance_profile_name)
 
   user_data                   = var.user_data
   user_data_replace_on_change = var.user_data_replace_on_change
