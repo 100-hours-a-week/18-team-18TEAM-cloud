@@ -6,7 +6,7 @@ variable "allowed_ssh_ips" {
 
 variable "env" {
   type    = string
-  default = "dev"
+  default = "prod"
 }
 
 variable "project" {
