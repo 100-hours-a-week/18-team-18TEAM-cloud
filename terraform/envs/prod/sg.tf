@@ -1,8 +1,8 @@
 module "ssh" {
     source = "../../modules/sg"
 
-    name        = "bizkit-dev-ssh-sg"
-    description = "allow ssh tunneling"
+    name        = "bizkit-prod-ssh-sg"
+    description = "ssh for developers"
 
     vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
@@ -18,7 +18,7 @@ module "ssh" {
 
     tags = {
         Project = "bizkit"
-        Env     = "dev"
+        Env     = "prod"
         Tier    = "edge"
     }
 }
@@ -27,8 +27,8 @@ module "ssh" {
 module "webserver" {
     source = "../../modules/sg"
 
-    name        = "bizkit-dev-webserver-sg"
-    description = "webserver-sg"
+    name        = "bizkit-prod-webserver-sg"
+    description = "allow http/https request from anywhere"
 
     vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
@@ -51,7 +51,7 @@ module "webserver" {
 
     tags = {
         Project = "bizkit"
-        Env     = "dev"
+        Env     = "prod"
         Tier    = "edge"
     }
 }
