@@ -4,25 +4,13 @@ variable "allowed_ssh_ips" {
   default     = []
 }
 
-variable "vpc_id" {
-  type = string
-}
-
-##########################
-# Compute Variables
-##########################
-variable "aws_region" {
+variable "env" {
   type    = string
-  default = "ap-northeast-2"
+  default = "dev"
 }
 
 variable "project" {
   type = string
-}
-
-variable "env" {
-  type    = string
-  default = "dev"
 }
 
 variable "key_name" {
@@ -41,5 +29,21 @@ variable "tags" {
 variable "existing_instance_id" {
   description = "이미 존재하는 dev EC2 인스턴스 ID(import 대상)"
   type        = string
+}
+
+variable "public_cidr" {
+  type = string
+}
+
+variable "ssh_port" {
+  type = number
+}
+
+variable "http_port" {
+  type = number
+}
+
+variable "https_port" {
+  type = number
 }
 
