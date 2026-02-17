@@ -15,6 +15,7 @@
 *.tfstate
 *.tfstate.*
 
+*.tftpl.*
 
 # Crash log files
 crash.log
@@ -44,3 +45,5 @@ crash.log
 **/sensitive.auto.tfvars
 *.secret.auto.tfvars
 *.local.auto.tfvars
+
+*.md
