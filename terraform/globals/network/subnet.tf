@@ -1,30 +1,20 @@
-resource "aws_subnet" "dev_public_1" {
+resource "aws_subnet" "this" {
+  for_each = var.subnets
+
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.0.0/20"
-  map_public_ip_on_launch = true
-  availability_zone       = "ap-northeast-2a"
+  cidr_block              = each.value.cidr_block
+  map_public_ip_on_launch = each.value.map_public_ip_on_launch
+  availability_zone       = each.value.availability_zone
 
-  tags = {
-    Name      = "bizkit-dev-public-1"
-    Project   = "bizkit"
-    Env       = "dev"
-    Tier      = "public"
-    ManagedBy = "terraform"
-    Module    = "network"
-  }
-}
-
-resource "aws_subnet" "dev_private_1" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.16.0/20"
-  availability_zone = "ap-northeast-2a"
-
-  tags = {
-    Name      = "bizkit-dev-private-1"
-    Project   = "bizkit"
-    Env       = "dev"
-    Tier      = "private"
-    ManagedBy = "terraform"
-    Module    = "network"
-  }
+  tags = merge(
+    {
+      Name      = each.value.name
+      Project   = var.project
+      Env       = each.value.env
+      Tier      = each.value.tier
+      ManagedBy = "terraform"
+      Module    = "network"
+    },
+    each.value.tags
+  )
 }
