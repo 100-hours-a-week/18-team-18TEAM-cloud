@@ -1,0 +1,39 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: ClusterConfiguration
+
+clusterName: bizkit-cluster
+kubernetesVersion: v1.33.9 
+controlPlaneEndpoint: "k8s-api.bizkit.internal:6443" # private DNS 이렇게 설정하든지 다르게 설정하면 바꾸고 아니면 ip로 수정 예정 
+
+networking:
+  dnsDomain: cluster.local 
+  serviceSubnet: # Service CIDR 10.0.0.0/16 이런거 네트워크 설정 되면 그 이후에 설정, 일반적으로 10.96.0.0/12가 많이 쓰임, IPv4 CIDR이면 따옴표 없어도 됨, IPv6/복합값이면 ""
+  podSubnet: # Pod CIDR, Calico가 사용할 CIDR, 192.168.0.0/16이 자주 쓰임, IPv4 CIDR이면 따옴표 없어도 됨, IPv6/복합값이면 ""
+
+apiServer:
+  certSANs: # API server 인증서가 실제 유효해야 하는 실제 접속 주소. control plane 대표 DNS나 LB IP, cp-1의 실제 private IP 등
+    - # DNS나 IPv4면 따옴표 없어도 됨, IPv6면 ""
+    - # DNS나 IPv4면 따옴표 없어도 됨, IPv6면 ""
+
+controllerManager: # kube-controller-manager 실행 플래그. IP나 DNS가 아닌 컴포넌트 옵션. 아직 사용 예정 X
+  extraArgs: []
+
+scheduler: # kube-scheduler 프로세스 옵션. 우리는 노드 풀을 분리해놔서 특별히 튜닝할게 없어서 비움
+  extraArgs: []
+
+etcd:
+  local:
+    dataDir: "/var/lib/etcd"
+    extraArgs: [] # 프로세스 옵션들, quota, compaction, metrics listen 등
+  # external: # 외부 etcd 클러스터 따로 쓸 때만 사용
+  #   endpoints:
+  #     - # "DNS또는IP:2379" 형식
+  #   caFile: 
+  #   certFile: 
+  #   keyFile: 
+
+dns: # CoreDNS 활성화 여부
+  disabled: false
+
+proxy: # kube-proxy 설치 여부
+  disabled: false
