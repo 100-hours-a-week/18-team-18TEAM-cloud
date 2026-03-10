@@ -33,7 +33,7 @@ resource "aws_security_group" "this" {
     {
       Name      = var.name
       ManagedBy = "terraform"
-      Module    = "sg"
+      Module    = "security_group"
     },
     var.tags
   )
