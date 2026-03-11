@@ -1,0 +1,67 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ai-api-allow-required-traffic
+  namespace: prod-ai-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ai-api
+      app.kubernetes.io/part-of: bizkit
+      environment: prod
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-fe
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: fe
+              app.kubernetes.io/part-of: bizkit
+              environment: prod
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-be
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: be
+              app.kubernetes.io/part-of: bizkit
+              environment: prod
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-ai
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ai-model
+              app.kubernetes.io/part-of: bizkit
+              environment: prod
+      ports:
+        - protocol: TCP
+          port: 8001
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-data
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
