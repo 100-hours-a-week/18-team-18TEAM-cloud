@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: fe-allow-required-traffic
+  namespace: prod-fe
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: fe
+      app.kubernetes.io/part-of: bizkit
+      environment: prod
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-system
+      ports:
+        - protocol: TCP
+          port: 3000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-be
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: be
+              app.kubernetes.io/part-of: bizkit
+              environment: prod
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
