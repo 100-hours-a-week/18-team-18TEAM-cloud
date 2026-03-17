@@ -1,0 +1,70 @@
+#!/bin/bash
+set -euxo pipefail
+
+hostnamectl set-hostname "${hostname}"
+
+swapoff -a || true
+sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab || true
+
+cat >/etc/modules-load.d/k8s.conf <<'EOF'
+overlay
+br_netfilter
+EOF
+
+modprobe overlay
+modprobe br_netfilter
+
+cat >/etc/sysctl.d/99-kubernetes-cri.conf <<'EOF'
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sysctl --system
+
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y apt-transport-https ca-certificates curl gpg jq software-properties-common
+
+mkdir -p /etc/apt/keyrings
+curl -fsSL "https://pkgs.k8s.io/core:/stable:/${kubernetes_channel}/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${kubernetes_channel}/deb/ /
+EOF
+
+curl -fsSL "https://download.opensuse.org/repositories/isv:/cri-o:/stable:/${kubernetes_channel}/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+
+cat >/etc/apt/sources.list.d/cri-o.list <<EOF
+deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/${kubernetes_channel}/deb/ /
+EOF
+
+apt-get update
+apt-get install -y cri-o kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+systemctl enable crio
+systemctl restart crio
+systemctl disable --now containerd 2>/dev/null || true
+systemctl enable kubelet
+
+mkdir -p /etc/bizkit
+cat >/etc/bizkit/node.env <<EOF
+CLUSTER_NAME="${cluster_name}"
+NODE_POOL="${node_pool}"
+NODE_ROLE="${node_role}"
+KUBERNETES_VERSION="${kubernetes_version}"
+CONTAINER_RUNTIME="crio"
+KUBE_RESERVED="${kube_reserved}"
+SYSTEM_RESERVED="${system_reserved}"
+EVICTION_HARD="${eviction_hard}"
+EOF
+
+cat >/etc/motd <<EOF
+Bizkit self-managed Kubernetes node bootstrap
+Cluster: ${cluster_name}
+Node role: ${node_role}
+Node pool: ${node_pool}
+Kubernetes version: ${kubernetes_version}
+Container runtime: CRI-O
+EOF

@@ -1,0 +1,36 @@
+# HPA target과 scale-out 조건은 공동 결정 항목이라, 이 파일은 BE 기준 초안만 담는다.
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: be
+  labels:
+    app.kubernetes.io/name: be
+    app.kubernetes.io/part-of: bizkit
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: be
+  minReplicas: 2 # BE는 최소 2 replica로 시작
+  maxReplicas: 6 # app-pool 최대 5노드와 공존 워크로드를 감안한 초안
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70 # TODO(A+B): 부하 테스트 결과 기준으로 최종 확정

@@ -1,0 +1,36 @@
+# AI Model은 startup 시간이 길고 모델 워크로드 특성이 크기 때문에 HPA 조건을 보수적으로 잡아야 한다.
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-model
+  labels:
+    app.kubernetes.io/name: ai-model
+    app.kubernetes.io/part-of: bizkit
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-model
+  minReplicas: 1
+  maxReplicas: 3
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+    scaleDown:
+      stabilizationWindowSeconds: 600
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 300
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70 # TODO(A+B): 모델 처리 특성에 맞는 scale 기준으로 최종 확정

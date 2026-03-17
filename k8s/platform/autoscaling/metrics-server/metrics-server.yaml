@@ -1,0 +1,29 @@
+# metrics-server는 HPA가 CPU/메모리 메트릭을 읽기 위한 전제 컴포넌트다.
+# 1차 구축에서는 kube-system에 2 replica로 두고, system 우선순위를 적용한다.
+
+apiVersion: addon.bizkit.io/v1alpha1
+kind: AddonInstallationPlan
+metadata:
+  name: metrics-server
+spec:
+  namespace: kube-system
+  installOrder: 2 # cluster bootstrap 뒤, HPA 적용 전 설치
+  owner: B
+  mode: vendor-manifest # 실제 적용 시 upstream manifest를 버전 고정 후 vendoring
+  replicas: 2
+  priorityClassName: bizkit-system-critical
+  placement:
+    pool: system-pool # system-pool 우선 배치 원칙
+  image:
+    repository: registry.k8s.io/metrics-server/metrics-server
+    tag: TODO_VERSION # TODO(B): 테스트한 metrics-server 버전으로 pin
+  args:
+    - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS
+    - --kubelet-use-node-status-port
+    - --metric-resolution=15s
+  todo:
+    - "TODO(B): kubelet serving cert SAN이 맞지 않으면 --kubelet-insecure-tls 사용 여부 검토"
+    - "TODO(B): 실제 vendored manifest에 ServiceAccount, RBAC, Deployment, APIService 반영"
+  notes:
+    - "HPA는 metrics-server 없이는 동작하지 않으므로 앱 HPA보다 먼저 준비한다."
+    - "CoreDNS/NodeLocal과 같은 system 계층이라 system-pool 우선 배치 기준을 따른다."

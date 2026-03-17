@@ -1,0 +1,116 @@
+aws_region                 = "ap-northeast-2"
+project_name               = "bizkit"
+environment_name           = "shared"
+cluster_name               = "bizkit-shared-cluster"
+cluster_endpoint_dns_name  = "TODO-k8s-api.internal.example.com"
+create_vpc                 = false
+
+existing_vpc_id = "vpc-TODO"
+
+existing_public_subnet_ids = [
+  "subnet-TODO-bizkit-prod-public-a",
+  "subnet-TODO-bizkit-prod-public-c",
+]
+
+existing_private_subnet_ids = [
+  "subnet-TODO-bizkit-prod-app-a",
+  "subnet-TODO-bizkit-prod-app-c",
+]
+
+control_plane_subnet_ids = [
+  "subnet-TODO-bizkit-prod-app-a",
+]
+
+app_pool_subnet_ids = [
+  "subnet-TODO-bizkit-prod-app-a",
+  "subnet-TODO-bizkit-prod-app-c",
+]
+
+ai_serving_pool_subnet_ids = [
+  "subnet-TODO-bizkit-prod-app-c",
+]
+
+system_pool_subnet_ids = [
+  "subnet-TODO-bizkit-prod-app-a",
+]
+
+# Only required when create_vpc = true.
+availability_zones = []
+vpc_cidr           = null
+
+public_subnet_cidrs  = []
+private_subnet_cidrs = []
+
+enable_nat_gateway  = true
+single_nat_gateway  = true
+
+allowed_ssh_cidrs = [
+  "203.0.113.0/24",
+]
+
+allowed_ssh_security_group_ids = []
+
+allowed_control_plane_api_cidrs = [
+  "203.0.113.0/24",
+]
+
+allowed_control_plane_api_security_group_ids = []
+ingress_source_cidrs                         = []
+ingress_source_security_group_ids            = []
+
+key_pair_name = "TODO-bizkit-admin-key"
+
+existing_cluster_internal_security_group_id = null
+existing_control_plane_security_group_id    = null
+existing_worker_security_group_id           = null
+
+control_plane_instance_type     = "t4g.medium"
+app_pool_instance_type          = "t4g.large"
+ai_serving_pool_instance_type   = "t4g.large"
+system_pool_instance_type       = "t4g.large"
+
+control_plane_count   = 1
+app_pool_count        = 2
+ai_serving_pool_count = 1
+system_pool_count     = 1
+
+root_volume_size_gib = 60
+root_volume_type     = "gp3"
+root_volume_encrypted = true
+
+ami_name_pattern = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-*"
+ami_owners       = ["099720109477"]
+ami_architecture = "arm64"
+
+kubernetes_version = "v1.33.9"
+kubernetes_channel = "v1.33"
+
+kube_reserved   = "cpu=150m,memory=400Mi,ephemeral-storage=1Gi"
+system_reserved = "cpu=150m,memory=600Mi,ephemeral-storage=1Gi"
+eviction_hard   = "memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%"
+
+service_subnet = "10.96.0.0/12"
+pod_subnet     = "10.244.0.0/16"
+
+enable_control_plane_internal_nlb = false
+
+control_plane_additional_policy_arns = []
+worker_additional_policy_arns        = []
+
+default_tags = {
+  owner     = "TODO-platform-team"
+  repo      = "bizkit"
+  managedBy = "terraform"
+}
+
+# Example if you intentionally want Terraform to create a new network:
+# create_vpc = true
+# availability_zones = ["ap-northeast-2a", "ap-northeast-2c"]
+# vpc_cidr = "10.40.0.0/16"
+# public_subnet_cidrs = ["10.40.0.0/24", "10.40.1.0/24"]
+# private_subnet_cidrs = ["10.40.10.0/24", "10.40.11.0/24"]
+#
+# Current preferred mode for Bizkit:
+# - create_vpc = false
+# - existing_private_subnet_ids = bizkit-prod-app-a/c
+# - existing_public_subnet_ids = bizkit-prod-public-a/c

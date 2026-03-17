@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model
+  labels:
+    app.kubernetes.io/name: ai-model
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: model
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-model
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-model
+        app.kubernetes.io/part-of: bizkit
+        app.kubernetes.io/component: model
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: ai-model
+          image: REPLACE_AI_MODEL_IMAGE
+          imagePullPolicy: IfNotPresent
+          command:
+            - uvicorn
+            - main:app
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: ai-model-env
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 60 # 모델 로딩 시간을 감안해 넉넉히 둔다
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 800m
+              memory: 2Gi
+            limits:
+              cpu: 1800m
+              memory: 4Gi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - sleep 15
+      # TODO(A+B): ai-serving-pool 전용 nodeAffinity / tolerations 추가
+      # TODO(A+B): model 전용 taint key/value가 확정되면 여기에 반영

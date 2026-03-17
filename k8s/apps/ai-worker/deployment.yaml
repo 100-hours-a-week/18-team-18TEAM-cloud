@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-worker
+  labels:
+    app.kubernetes.io/name: ai-worker
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: worker
+spec:
+  replicas: 1 # 초기에는 1개로 시작하고, 실제 scale-out은 KEDA/HPA 기준으로 늘린다
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-worker
+        app.kubernetes.io/part-of: bizkit
+        app.kubernetes.io/component: worker
+    spec:
+      terminationGracePeriodSeconds: 90 # 현재 처리 중인 작업을 마무리하거나 재전달 여유를 확보
+      containers:
+        - name: ai-worker
+          image: REPLACE_AI_IMAGE # ai-api와 동일 저장소 이미지를 쓰되 worker command로 구동
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - run_worker.py
+          args:
+            - --group
+            - ai-workers
+          envFrom:
+            - secretRef:
+                name: ai-worker-env
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - tr '\000' ' ' < /proc/1/cmdline | grep -q 'run_worker.py'
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - tr '\000' ' ' < /proc/1/cmdline | grep -q 'run_worker.py'
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 400m
+              memory: 700Mi
+            limits:
+              cpu: 1000m
+              memory: 1200Mi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - sleep 20
+      # TODO(A+B): ai-serving-pool 전용 nodeAffinity / tolerations 추가
