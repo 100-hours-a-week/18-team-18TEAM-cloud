@@ -1,0 +1,54 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "k8s-api.bizkit.internal:6443"
+    token: "" # TODO(B): kubeadm token create 로 발급한 worker join token
+    caCertHashes:
+      - "" # TODO(B): discovery-token-ca-cert-hash 값
+    unsafeSkipCAVerification: false
+  timeout: "5m0s"
+  tlsBootstrapToken: "" # TODO(B): 별도 토큰을 쓰지 않으면 bootstrap token과 동일하게 사용
+
+nodeRegistration:
+  name: "" # TODO(B): worker hostname 또는 명시 이름
+  criSocket: "unix:///var/run/containerd/containerd.sock"
+  kubeletExtraArgs:
+    - name: "node-ip"
+      value: "" # TODO(B): worker private IP
+    - name: "kube-reserved"
+      value: "cpu=150m,memory=400Mi,ephemeral-storage=1Gi"
+    - name: "system-reserved"
+      value: "cpu=150m,memory=600Mi,ephemeral-storage=1Gi"
+    - name: "eviction-hard"
+      value: "memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%"
+    # Worker node profile examples:
+    # app-pool:
+    # - name: "node-labels"
+    #   value: "nodepool=app-pool,environment=prod"
+    #
+    # ai-serving-pool (worker):
+    # - name: "node-labels"
+    #   value: "nodepool=ai-serving-pool,environment=prod"
+    #
+    # ai-serving-pool (model dedicated):
+    # - name: "node-labels"
+    #   value: "nodepool=ai-serving-pool,dedicated=model,environment=prod"
+    # - name: "register-with-taints"
+    #   value: "dedicated=model:NoSchedule"
+    #
+    # system-pool:
+    # - name: "node-labels"
+    #   value: "nodepool=system-pool,environment=prod"
+  ignorePreflightErrors: []
+  imagePullPolicy: "IfNotPresent"
+  imagePullSerial: true
+
+skipPhases: []
+
+timeouts:
+  discovery: "5m0s"
+  tlsBootstrap: "5m0s"
+  kubeletHealthCheck: "4m0s"
+  kubernetesAPICall: "1m0s"

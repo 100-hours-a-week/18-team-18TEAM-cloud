@@ -1,0 +1,45 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "k8s-api.bizkit.internal:6443"
+    token: "" # TODO(B): kubeadm token create 로 발급한 control plane join token
+    caCertHashes:
+      - "" # TODO(B): discovery-token-ca-cert-hash 값
+    unsafeSkipCAVerification: false
+  timeout: "5m0s"
+  tlsBootstrapToken: "" # TODO(B): 별도 토큰을 쓰지 않으면 bootstrap token과 동일하게 사용
+
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: "" # TODO(B): 추가 control plane 노드 private IP
+    bindPort: 6443
+  certificateKey: "" # TODO(B): kubeadm init phase upload-certs --upload-certs 결과값
+
+nodeRegistration:
+  name: "" # TODO(B): control plane hostname 또는 명시 이름
+  criSocket: "unix:///var/run/containerd/containerd.sock"
+  taints:
+    - key: "node-role.kubernetes.io/control-plane"
+      effect: "NoSchedule"
+  kubeletExtraArgs:
+    - name: "node-ip"
+      value: "" # TODO(B): 추가 control plane 노드 private IP
+    - name: "kube-reserved"
+      value: "cpu=150m,memory=400Mi,ephemeral-storage=1Gi"
+    - name: "system-reserved"
+      value: "cpu=150m,memory=600Mi,ephemeral-storage=1Gi"
+    - name: "eviction-hard"
+      value: "memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%"
+  ignorePreflightErrors: []
+  imagePullPolicy: "IfNotPresent"
+  imagePullSerial: true
+
+skipPhases: []
+
+timeouts:
+  discovery: "5m0s"
+  tlsBootstrap: "5m0s"
+  kubeletHealthCheck: "4m0s"
+  kubernetesAPICall: "1m0s"
