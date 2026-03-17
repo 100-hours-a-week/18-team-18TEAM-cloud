@@ -9,7 +9,7 @@ spec:
   swap:
     disabled: true # kubelet 안정성을 위해 swap을 끈다
   kernelModules:
-    - overlay # containerd overlayfs 사용
+    - overlay # CRI-O가 사용할 overlayfs 지원
     - br_netfilter # Kubernetes 네트워크 브리지 트래픽 처리
   sysctl:
     net.bridge.bridge-nf-call-iptables: 1 # 브리지 트래픽을 iptables 규칙으로 본다
@@ -29,7 +29,7 @@ spec:
     - imagefs.available<15% # 이미지 저장소 여유 부족 기준
     - nodefs.inodesFree<5% # inode 고갈 기준
   packages:
-    - containerd # 컨테이너 런타임
+    - cri-o # 컨테이너 런타임
     - kubelet # 노드 에이전트
     - kubeadm # 클러스터 bootstrap 도구
     - kubectl # 운영 확인용 CLI

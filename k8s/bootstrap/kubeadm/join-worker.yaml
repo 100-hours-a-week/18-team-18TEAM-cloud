@@ -10,7 +10,7 @@ discovery:
 
 nodeRegistration:
   name: "" # worker 노드가 Kubernetes Node 객체로 등록될 때 사용할 이름. 비우면 OS hostname 사용
-  criSocket: "unix:///var/run/containerd/containerd.sock" # kubelet이 사용할 containerd 소켓 경로
+  criSocket: "unix:///var/run/crio/crio.sock" # kubelet이 사용할 CRI-O 소켓 경로
   kubeletExtraArgs:
     - name: "node-ip"
       value: "" # TODO(B): 이 worker 노드의 실제 private IP

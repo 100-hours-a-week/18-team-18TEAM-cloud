@@ -16,7 +16,7 @@ controlPlane:
 
 nodeRegistration:
   name: "" # control plane 노드 이름. 비우면 OS hostname 사용
-  criSocket: "unix:///var/run/containerd/containerd.sock" # kubelet이 사용할 containerd 소켓 경로
+  criSocket: "unix:///var/run/crio/crio.sock" # kubelet이 사용할 CRI-O 소켓 경로
   taints:
     - key: "node-role.kubernetes.io/control-plane" # control plane 노드 기본 taint key
       effect: "NoSchedule" # 일반 workload가 control plane으로 올라가지 않게 유지
