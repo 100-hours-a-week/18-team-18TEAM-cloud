@@ -1,22 +1,4 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - platform/shared/namespaces/namespaces.yaml
-  - platform/shared/priorityclasses/priorityclasses.yaml
-  - platform/shared/limitranges/limitranges.yaml
-  - platform/shared/resourcequotas/resourcequotas.yaml
-  - platform/networking/network-policies/default-deny.yaml
-  - platform/networking/network-policies/dns-exceptions.yaml
-  - platform/networking/network-policies/prod-data-redis-allow-required-traffic.yaml
-  - platform/networking/network-policies/prod-system-allow-required-traffic.yaml
-  - platform/networking/calico/calico.yaml
-  - platform/networking/coredns/coredns.yaml
-  - platform/networking/nodelocal-dns/nodelocal-dns.yaml
-  - platform/ingress/haproxy-ingress
-  - platform/autoscaling/metrics-server/metrics-server.yaml
-  - platform/secrets/external-secrets/external-secrets.yaml
-  - apps/fe
-  - apps/be
-  - apps/ai-api
-  - apps/ai-model
-  - apps/ai-worker
+  - clusters/prod

@@ -1,0 +1,7 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model
+  namespace: prod-ai
+spec:
+  replicas: 2
