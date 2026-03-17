@@ -15,7 +15,6 @@ metadata:
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:

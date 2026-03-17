@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fe
-  namespace: prod-fe
+  name: ai-api
+  namespace: prod-ai-api
   labels:
-    app.kubernetes.io/name: fe
+    app.kubernetes.io/name: ai-api
     app.kubernetes.io/part-of: bizkit
-    app.kubernetes.io/component: frontend
+    app.kubernetes.io/component: ai-api
     environment: prod
     tier: app
-    network-role: public-entry
+    network-role: internal-api
   annotations:
     bizkit.io/git-sha: REPLACE_ME_GIT_SHA
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -23,18 +22,18 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: fe
+      app.kubernetes.io/name: ai-api
       app.kubernetes.io/part-of: bizkit
       environment: prod
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: fe
+        app.kubernetes.io/name: ai-api
         app.kubernetes.io/part-of: bizkit
-        app.kubernetes.io/component: frontend
+        app.kubernetes.io/component: ai-api
         environment: prod
         tier: app
-        network-role: public-entry
+        network-role: internal-api
       annotations:
         bizkit.io/git-sha: REPLACE_ME_GIT_SHA
         bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
@@ -50,7 +49,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app.kubernetes.io/name: fe
+              app.kubernetes.io/name: ai-api
               app.kubernetes.io/part-of: bizkit
               environment: prod
       affinity:
@@ -61,33 +60,35 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app.kubernetes.io/name: fe
+                    app.kubernetes.io/name: ai-api
                     app.kubernetes.io/part-of: bizkit
                     environment: prod
       containers:
-        - name: fe
-          image: REPLACE_ME_FE_IMAGE
+        - name: ai-api
+          image: REPLACE_ME_AI_API_IMAGE
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: 8000
               protocol: TCP
           envFrom:
             - secretRef:
-                name: fe-secret
+                name: ai-api-secret
           readinessProbe:
             httpGet:
-              path: /
+              path: /ai/ready
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /ai/health
               port: http
             initialDelaySeconds: 30
             periodSeconds: 20
           startupProbe:
-            tcpSocket:
+            httpGet:
+              path: /ai/health
               port: http
             failureThreshold: 30
             periodSeconds: 5
@@ -97,8 +98,8 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 10"]
           resources:
             requests:
-              cpu: 300m
-              memory: 512Mi
+              cpu: 500m
+              memory: 800Mi
             limits:
-              cpu: 700m
-              memory: 1Gi
+              cpu: 1200m
+              memory: 1536Mi

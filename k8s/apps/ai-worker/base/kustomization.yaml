@@ -3,7 +3,3 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - pdb.yaml
-  - service.yaml
-  - hpa.yaml
-  - externalsecret.yaml
-  - networkpolicy.yaml

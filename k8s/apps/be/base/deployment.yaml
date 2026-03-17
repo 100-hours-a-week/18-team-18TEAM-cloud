@@ -15,7 +15,6 @@ metadata:
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 8
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -76,17 +75,20 @@ spec:
             - secretRef:
                 name: be-secret
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /api/ready
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /actuator/health
               port: http
             initialDelaySeconds: 30
             periodSeconds: 20
           startupProbe:
-            tcpSocket:
+            httpGet:
+              path: /actuator/health
               port: http
             failureThreshold: 30
             periodSeconds: 5

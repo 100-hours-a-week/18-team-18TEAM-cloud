@@ -1,15 +1,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: be
-  namespace: prod-be
+  name: fe
+  namespace: prod-fe
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: be
-  minReplicas: 8
-  maxReplicas: 16
+    name: fe
+  minReplicas: 2
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:
