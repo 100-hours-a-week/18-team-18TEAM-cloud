@@ -1,0 +1,10 @@
+aws_region          = "ap-northeast-2"
+bucket_name         = "bizkit-k8s-terraform-state"
+kms_key_arn         = null
+force_destroy       = false
+
+tags = {
+  project   = "bizkit"
+  component = "terraform-state"
+  managedBy = "terraform"
+}
