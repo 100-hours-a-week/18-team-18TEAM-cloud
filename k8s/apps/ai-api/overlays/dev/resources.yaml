@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-api
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: ai-api
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ai-api
+    environment: dev
+    tier: app
+    network-role: internal-api
+  annotations:
+    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-api
+      app.kubernetes.io/part-of: bizkit
+      environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-api
+        app.kubernetes.io/part-of: bizkit
+        app.kubernetes.io/component: ai-api
+        environment: dev
+        tier: app
+        network-role: internal-api
+      annotations:
+        bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+        bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+        bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    spec:
+      priorityClassName: bizkit-app-standard
+      terminationGracePeriodSeconds: 30
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: ai-api
+              app.kubernetes.io/part-of: bizkit
+              environment: dev
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: ai-api
+                    app.kubernetes.io/part-of: bizkit
+                    environment: dev
+      containers:
+        - name: ai-api
+          image: REPLACE_ME_AI_API_IMAGE
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: ai-api-secret
+          readinessProbe:
+            httpGet:
+              path: /ai/ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ai/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          startupProbe:
+            httpGet:
+              path: /ai/health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 800Mi
+            limits:
+              cpu: 1200m
+              memory: 1536Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-api
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: ai-api
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ai-api
+    environment: dev
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: ai-api
+    app.kubernetes.io/part-of: bizkit
+    environment: dev
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ai-api
+  namespace: dev
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-api
+      app.kubernetes.io/part-of: bizkit
+      environment: dev
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ai-api-secret
+  namespace: dev
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: bizkit-cluster-secret-store
+  target:
+    name: ai-api-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: APP_ENV
+      remoteRef:
+        key: REPLACE_ME_AI_API_SECRET_REMOTE_KEY
+        property: APP_ENV
