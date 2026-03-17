@@ -18,11 +18,11 @@ metadata:
   namespace: prod-fe
 spec:
   hard:
-    requests.cpu: "6"
-    requests.memory: "8Gi"
-    limits.cpu: "12"
-    limits.memory: "16Gi"
-    pods: "20"
+    requests.cpu: "2"
+    requests.memory: "3Gi"
+    limits.cpu: "4"
+    limits.memory: "6Gi"
+    pods: "10"
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -31,11 +31,11 @@ metadata:
   namespace: prod-be
 spec:
   hard:
-    requests.cpu: "12"
-    requests.memory: "20Gi"
-    limits.cpu: "24"
-    limits.memory: "40Gi"
-    pods: "30"
+    requests.cpu: "5"
+    requests.memory: "9Gi"
+    limits.cpu: "10"
+    limits.memory: "14Gi"
+    pods: "12"
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -44,11 +44,11 @@ metadata:
   namespace: prod-ai-api
 spec:
   hard:
-    requests.cpu: "8"
-    requests.memory: "12Gi"
-    limits.cpu: "16"
-    limits.memory: "24Gi"
-    pods: "20"
+    requests.cpu: "3"
+    requests.memory: "5Gi"
+    limits.cpu: "6"
+    limits.memory: "8Gi"
+    pods: "10"
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -57,11 +57,11 @@ metadata:
   namespace: prod-ai
 spec:
   hard:
-    requests.cpu: "12"
-    requests.memory: "24Gi"
-    limits.cpu: "24"
-    limits.memory: "48Gi"
-    pods: "30"
+    requests.cpu: "6"
+    requests.memory: "14Gi"
+    limits.cpu: "12"
+    limits.memory: "24Gi"
+    pods: "16"
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -70,11 +70,11 @@ metadata:
   namespace: prod-data
 spec:
   hard:
-    requests.cpu: "8"
-    requests.memory: "16Gi"
-    limits.cpu: "16"
-    limits.memory: "32Gi"
-    pods: "20"
+    requests.cpu: "1"
+    requests.memory: "1Gi"
+    limits.cpu: "2"
+    limits.memory: "2Gi"
+    pods: "5"
 ---
 apiVersion: v1
 kind: ResourceQuota

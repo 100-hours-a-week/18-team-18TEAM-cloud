@@ -4,3 +4,4 @@ resources:
   - controller.yaml
   - backend-services.yaml
   - shared-ingress.yaml
+  - websocket-ingress.yaml
