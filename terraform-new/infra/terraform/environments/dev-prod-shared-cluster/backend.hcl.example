@@ -1,0 +1,5 @@
+profile        = "bizkit"
+bucket         = "bizkit-k8s-terraform-state"
+key            = "globals/services/k8s-shared-cluster/terraform.tfstate"
+region         = "ap-northeast-2"
+encrypt        = true

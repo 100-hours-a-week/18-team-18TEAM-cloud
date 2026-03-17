@@ -1,45 +1,28 @@
-apiVersion: kubeadm.k8s.io/v1beta4
-kind: JoinConfiguration
+apiVersion: kubeadm.k8s.io/v1beta4 # kubeadm 설정 API 버전
+kind: JoinConfiguration # 추가 control plane 노드가 기존 클러스터에 참여할 때 사용하는 문서 타입
 
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "k8s-api.bizkit.internal:6443"
-    token: "" # TODO(B): kubeadm token create 로 발급한 control plane join token
+    apiServerEndpoint: "k8s-api.bizkit.internal:6443" # control plane 공통 진입점. cp-2, cp-3도 이 주소를 통해 조인
+    token: "" # TODO(B): kubeadm init 후 발급된 bootstrap token
     caCertHashes:
-      - "" # TODO(B): discovery-token-ca-cert-hash 값
-    unsafeSkipCAVerification: false
-  timeout: "5m0s"
-  tlsBootstrapToken: "" # TODO(B): 별도 토큰을 쓰지 않으면 bootstrap token과 동일하게 사용
+      - "" # TODO(B): discovery-token-ca-cert-hash 값. sha256:... 형식
 
 controlPlane:
   localAPIEndpoint:
-    advertiseAddress: "" # TODO(B): 추가 control plane 노드 private IP
-    bindPort: 6443
-  certificateKey: "" # TODO(B): kubeadm init phase upload-certs --upload-certs 결과값
+    advertiseAddress: "" # TODO(B): cp-2 또는 cp-3가 자신을 API server 주소로 광고할 실제 private IP
+    bindPort: 6443 # kube-apiserver가 로컬에서 열 포트
+  certificateKey: "" # TODO(B): upload-certs 단계에서 발급된 certificate key. 멀티 control plane 전환 시 필요
 
 nodeRegistration:
-  name: "" # TODO(B): control plane hostname 또는 명시 이름
-  criSocket: "unix:///var/run/containerd/containerd.sock"
+  name: "" # control plane 노드 이름. 비우면 OS hostname 사용
+  criSocket: "unix:///var/run/containerd/containerd.sock" # kubelet이 사용할 containerd 소켓 경로
   taints:
-    - key: "node-role.kubernetes.io/control-plane"
-      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane" # control plane 노드 기본 taint key
+      effect: "NoSchedule" # 일반 workload가 control plane으로 올라가지 않게 유지
   kubeletExtraArgs:
     - name: "node-ip"
-      value: "" # TODO(B): 추가 control plane 노드 private IP
-    - name: "kube-reserved"
-      value: "cpu=150m,memory=400Mi,ephemeral-storage=1Gi"
-    - name: "system-reserved"
-      value: "cpu=150m,memory=600Mi,ephemeral-storage=1Gi"
-    - name: "eviction-hard"
-      value: "memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%"
-  ignorePreflightErrors: []
-  imagePullPolicy: "IfNotPresent"
-  imagePullSerial: true
-
-skipPhases: []
-
-timeouts:
-  discovery: "5m0s"
-  tlsBootstrap: "5m0s"
-  kubeletHealthCheck: "4m0s"
-  kubernetesAPICall: "1m0s"
+      value: "" # TODO(B): cp-2 또는 cp-3의 실제 private IP
+  ignorePreflightErrors: [] # 특별히 무시할 사전 점검 에러가 없으면 빈 배열 유지
+  imagePullPolicy: "IfNotPresent" # 필요한 이미지가 로컬에 없을 때만 내려받음
+  imagePullSerial: true # 초기 이미지 pull 부하를 줄이기 위해 순차 pull 유지
