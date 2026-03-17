@@ -9,6 +9,14 @@ metadata:
     app.kubernetes.io/component: ingress
   annotations:
     external-dns.alpha.kubernetes.io/hostname: cardcaro.com,dev.cardcaro.com
+    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    haproxy-ingress.github.io/timeout-connect: "300s"
+    haproxy-ingress.github.io/timeout-http-request: "300s"
+    haproxy-ingress.github.io/timeout-keep-alive: "75s"
+    haproxy-ingress.github.io/timeout-server: "300s"
+    haproxy-ingress.github.io/timeout-tunnel: "300s"
 spec:
   ingressClassName: haproxy
   rules:
