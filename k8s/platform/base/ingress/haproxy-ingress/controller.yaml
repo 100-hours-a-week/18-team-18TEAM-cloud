@@ -136,7 +136,7 @@ metadata:
     app.kubernetes.io/part-of: bizkit
     app.kubernetes.io/component: ingress
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: haproxy-ingress
