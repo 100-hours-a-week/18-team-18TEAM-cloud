@@ -15,7 +15,7 @@ metadata:
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -41,6 +41,10 @@ spec:
         bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
     spec:
       priorityClassName: bizkit-ai-batch
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
       terminationGracePeriodSeconds: 60
       topologySpreadConstraints:
         - maxSkew: 1
@@ -135,7 +139,7 @@ spec:
       app.kubernetes.io/part-of: bizkit
       environment: dev
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: ai-model-secret
@@ -153,3 +157,39 @@ spec:
       remoteRef:
         key: dev/ai-model
         property: APP_ENV
+    - secretKey: VLLM_BASE_URL
+      remoteRef:
+        key: dev/ai-model
+        property: VLLM_BASE_URL
+    - secretKey: VLM_BASE_URL
+      remoteRef:
+        key: dev/ai-model
+        property: VLM_BASE_URL
+    - secretKey: RUNPOD_API_KEY
+      remoteRef:
+        key: dev/ai-model
+        property: RUNPOD_API_KEY
+    - secretKey: GITHUB_TOKEN
+      remoteRef:
+        key: dev/ai-model
+        property: GITHUB_TOKEN
+    - secretKey: TAVILY_API_KEY
+      remoteRef:
+        key: dev/ai-model
+        property: TAVILY_API_KEY
+    - secretKey: REDIS_URL
+      remoteRef:
+        key: dev/ai-model
+        property: REDIS_URL
+    - secretKey: EMBEDDING_SERVICE_URL
+      remoteRef:
+        key: dev/ai-model
+        property: EMBEDDING_SERVICE_URL
+    - secretKey: MILVUS_URI
+      remoteRef:
+        key: dev/ai-model
+        property: MILVUS_URI
+    - secretKey: MILVUS_TOKEN
+      remoteRef:
+        key: dev/ai-model
+        property: MILVUS_TOKEN

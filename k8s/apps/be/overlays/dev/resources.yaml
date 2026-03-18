@@ -41,6 +41,10 @@ spec:
         bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
     spec:
       priorityClassName: bizkit-app-standard
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
       terminationGracePeriodSeconds: 30
       topologySpreadConstraints:
         - maxSkew: 1
@@ -64,8 +68,8 @@ spec:
                     environment: dev
       containers:
         - name: be
-          image: REPLACE_ME_BE_IMAGE
-          imagePullPolicy: IfNotPresent
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-be-dev:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
@@ -138,7 +142,7 @@ spec:
       app.kubernetes.io/part-of: bizkit
       environment: dev
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: be-secret
@@ -156,3 +160,111 @@ spec:
       remoteRef:
         key: dev/be
         property: APP_ENV
+    - secretKey: SPRING_DATASOURCE_URL
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_URL
+    - secretKey: SPRING_DATASOURCE_USERNAME
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_USERNAME
+    - secretKey: SPRING_DATASOURCE_PASSWORD
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_PASSWORD
+    - secretKey: SPRING_DATASOURCE_DRIVER
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_DRIVER
+    - secretKey: REDIS_HOST
+      remoteRef:
+        key: dev/be
+        property: REDIS_HOST
+    - secretKey: REDIS_PASSWORD
+      remoteRef:
+        key: dev/be
+        property: REDIS_PASSWORD
+    - secretKey: SPRING_PROFILES_ACTIVE
+      remoteRef:
+        key: dev/be
+        property: SPRING_PROFILES_ACTIVE
+    - secretKey: SPRING_JPA_HIBERNATE_DDL_AUTO
+      remoteRef:
+        key: dev/be
+        property: SPRING_JPA_HIBERNATE_DDL_AUTO
+    - secretKey: KAKAO_CLIENT_ID
+      remoteRef:
+        key: dev/be
+        property: KAKAO_CLIENT_ID
+    - secretKey: KAKAO_CLIENT_SECRET
+      remoteRef:
+        key: dev/be
+        property: KAKAO_CLIENT_SECRET
+    - secretKey: KAKAO_REDIRECT_URIS
+      remoteRef:
+        key: dev/be
+        property: KAKAO_REDIRECT_URIS
+    - secretKey: KAKAO_ADMIN_KEY
+      remoteRef:
+        key: dev/be
+        property: KAKAO_ADMIN_KEY
+    - secretKey: JWT_SECRET
+      remoteRef:
+        key: dev/be
+        property: JWT_SECRET
+    - secretKey: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+      remoteRef:
+        key: dev/be
+        property: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+    - secretKey: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+      remoteRef:
+        key: dev/be
+        property: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+    - secretKey: CORS_ALLOWED_ORIGINS
+      remoteRef:
+        key: dev/be
+        property: CORS_ALLOWED_ORIGINS
+    - secretKey: COOKIE_SECURE
+      remoteRef:
+        key: dev/be
+        property: COOKIE_SECURE
+    - secretKey: COOKIE_SAME_SITE
+      remoteRef:
+        key: dev/be
+        property: COOKIE_SAME_SITE
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: dev/be
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: dev/be
+        property: AWS_SECRET_ACCESS_KEY
+    - secretKey: AWS_REGION
+      remoteRef:
+        key: dev/be
+        property: AWS_REGION
+    - secretKey: AWS_S3_BUCKET
+      remoteRef:
+        key: dev/be
+        property: AWS_S3_BUCKET
+    - secretKey: AWS_S3_PRESIGNED_URL_EXPIRATION_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AWS_S3_PRESIGNED_URL_EXPIRATION_SECONDS
+    - secretKey: AI_SERVER_URL
+      remoteRef:
+        key: dev/be
+        property: AI_SERVER_URL
+    - secretKey: AI_TIMEOUT_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AI_TIMEOUT_SECONDS
+    - secretKey: AI_POLL_INTERVAL_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AI_POLL_INTERVAL_SECONDS
+    - secretKey: METRICS_DENY_URI_LIST
+      remoteRef:
+        key: dev/be
+        property: METRICS_DENY_URI_LIST

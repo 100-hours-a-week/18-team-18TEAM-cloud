@@ -41,6 +41,10 @@ spec:
         bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
     spec:
       priorityClassName: bizkit-app-standard
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
       terminationGracePeriodSeconds: 30
       topologySpreadConstraints:
         - maxSkew: 1
@@ -64,8 +68,8 @@ spec:
                     environment: dev
       containers:
         - name: fe
-          image: REPLACE_ME_FE_IMAGE
-          imagePullPolicy: IfNotPresent
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-dev:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 3000
@@ -138,7 +142,7 @@ spec:
       app.kubernetes.io/part-of: bizkit
       environment: dev
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: fe-secret
@@ -156,3 +160,43 @@ spec:
       remoteRef:
         key: dev/fe
         property: APP_ENV
+    - secretKey: SPRING_API_BASE_URL
+      remoteRef:
+        key: dev/fe
+        property: SPRING_API_BASE_URL
+    - secretKey: AI_API_BASE_URL
+      remoteRef:
+        key: dev/fe
+        property: AI_API_BASE_URL
+    - secretKey: REDIS_URL
+      remoteRef:
+        key: dev/fe
+        property: REDIS_URL
+    - secretKey: REDIS_NAMESPACE
+      remoteRef:
+        key: dev/fe
+        property: REDIS_NAMESPACE
+    - secretKey: SESSION_COOKIE_SECURE
+      remoteRef:
+        key: dev/fe
+        property: SESSION_COOKIE_SECURE
+    - secretKey: SESSION_TTL_SECONDS
+      remoteRef:
+        key: dev/fe
+        property: SESSION_TTL_SECONDS
+    - secretKey: MAX_SESSION_LIFETIME
+      remoteRef:
+        key: dev/fe
+        property: MAX_SESSION_LIFETIME
+    - secretKey: MIN_ROTATION_INTERVAL
+      remoteRef:
+        key: dev/fe
+        property: MIN_ROTATION_INTERVAL
+    - secretKey: SENTRY_DSN
+      remoteRef:
+        key: dev/fe
+        property: SENTRY_DSN
+    - secretKey: SENTRY_ENVIRONMENT
+      remoteRef:
+        key: dev/fe
+        property: SENTRY_ENVIRONMENT
