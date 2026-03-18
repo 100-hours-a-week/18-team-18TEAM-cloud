@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - shared/namespaces/namespaces.yaml
+  - shared/priorityclasses/priorityclasses.yaml
+  - shared/limitranges/limitranges.yaml
+  - shared/resourcequotas/resourcequotas.yaml
+  - networking/network-policies/default-deny.yaml
+  - networking/network-policies/dns-exceptions.yaml
+  - networking/network-policies/prod-data-redis-allow-required-traffic.yaml
+  - networking/network-policies/system-allow-required-traffic.yaml
+  - networking/calico
+  - networking/coredns/coredns.yaml
+  - networking/nodelocal-dns/nodelocal-dns.yaml
+  - ingress/haproxy-ingress
+  - autoscaling/metrics-server/metrics-server.yaml
+  - secrets/external-secrets/external-secrets.yaml
+  - secrets/external-secrets/vault-auth-reviewer.yaml
+  - secrets/external-secrets/vault-ca-configmap.yaml
+  - secrets/external-secrets/clustersecretstore.yaml

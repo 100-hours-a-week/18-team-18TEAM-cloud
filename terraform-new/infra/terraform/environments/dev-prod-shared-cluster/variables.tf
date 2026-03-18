@@ -167,6 +167,12 @@ variable "existing_worker_security_group_id" {
   default     = null
 }
 
+variable "additional_node_security_group_ids" {
+  description = "Optional security group IDs attached to every cluster node in addition to the cluster SGs."
+  type        = list(string)
+  default     = []
+}
+
 variable "create_instance_profiles" {
   description = "Whether Terraform should create IAM instance profiles for EC2 nodes. Disable if the caller lacks iam:CreateInstanceProfile."
   type        = bool

@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-dev-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: fe-dev-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: dev
+spec:
+  type: ExternalName
+  externalName: fe.dev.svc.cluster.local
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-dev-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: be-dev-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: dev
+spec:
+  type: ExternalName
+  externalName: be.dev.svc.cluster.local
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-api-dev-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: ai-api-dev-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: dev
+spec:
+  type: ExternalName
+  externalName: ai-api.dev.svc.cluster.local
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-prod-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: fe-prod-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: prod
+spec:
+  type: ExternalName
+  externalName: fe.prod-fe.svc.cluster.local
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-prod-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: be-prod-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: prod
+spec:
+  type: ExternalName
+  externalName: be.prod-be.svc.cluster.local
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-api-prod-proxy
+  namespace: system
+  labels:
+    app.kubernetes.io/name: ai-api-prod-proxy
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress-backend-proxy
+    environment: prod
+spec:
+  type: ExternalName
+  externalName: ai-api.prod-ai-api.svc.cluster.local
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP

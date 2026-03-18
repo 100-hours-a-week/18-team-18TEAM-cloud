@@ -13,7 +13,7 @@ bootstrapTokens:
 
 nodeRegistration:
   name: "" # 이 노드가 Kubernetes Node 객체로 등록될 때 사용할 이름. 비우면 OS hostname을 사용
-  criSocket: "unix:///var/run/containerd/containerd.sock" # kubelet이 사용할 컨테이너 런타임 소켓 경로. 우리는 containerd 기준
+  criSocket: "unix:///var/run/crio/crio.sock" # kubelet이 사용할 컨테이너 런타임 소켓 경로. 우리는 CRI-O 기준
   taints:
     - key: "node-role.kubernetes.io/control-plane" # control plane 노드라는 의미의 기본 taint key
       effect: "NoSchedule" # 일반 앱 파드가 기본적으로 control plane에 스케줄되지 않게 막음

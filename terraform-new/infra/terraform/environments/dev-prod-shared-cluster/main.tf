@@ -5,7 +5,7 @@ locals {
     project           = var.project_name
     environment       = var.environment_name
     cluster           = var.cluster_name
-    "k8s-scope"       = "shared-cluster"
+    "k8s-scope"       = "prod-cluster"
     "k8s-namespaces"  = "dev/prod"
     managedBy         = "terraform"
     architecture      = var.ami_architecture
@@ -310,7 +310,7 @@ module "control_plane" {
   ami_id                = data.aws_ami.node.id
   instance_type         = var.control_plane_instance_type
   subnet_ids            = local.control_plane_subnet_ids
-  security_group_ids    = compact([local.cluster_internal_sg_id, local.control_plane_sg_id])
+  security_group_ids    = compact(concat([local.cluster_internal_sg_id, local.control_plane_sg_id], var.additional_node_security_group_ids))
   key_name              = var.key_pair_name
   instance_profile_name = module.control_plane_iam.instance_profile_name
   cluster_name          = var.cluster_name
@@ -335,7 +335,7 @@ module "app_pool" {
   ami_id                = data.aws_ami.node.id
   instance_type         = var.app_pool_instance_type
   subnet_ids            = local.app_pool_subnet_ids
-  security_group_ids    = compact([local.cluster_internal_sg_id, local.worker_sg_id])
+  security_group_ids    = compact(concat([local.cluster_internal_sg_id, local.worker_sg_id], var.additional_node_security_group_ids))
   key_name              = var.key_pair_name
   instance_profile_name = module.worker_iam.instance_profile_name
   cluster_name          = var.cluster_name
@@ -360,7 +360,7 @@ module "ai_serving_pool" {
   ami_id                = data.aws_ami.node.id
   instance_type         = var.ai_serving_pool_instance_type
   subnet_ids            = local.ai_pool_subnet_ids
-  security_group_ids    = compact([local.cluster_internal_sg_id, local.worker_sg_id])
+  security_group_ids    = compact(concat([local.cluster_internal_sg_id, local.worker_sg_id], var.additional_node_security_group_ids))
   key_name              = var.key_pair_name
   instance_profile_name = module.worker_iam.instance_profile_name
   cluster_name          = var.cluster_name
@@ -385,7 +385,7 @@ module "system_pool" {
   ami_id                = data.aws_ami.node.id
   instance_type         = var.system_pool_instance_type
   subnet_ids            = local.system_pool_subnet_ids
-  security_group_ids    = compact([local.cluster_internal_sg_id, local.worker_sg_id])
+  security_group_ids    = compact(concat([local.cluster_internal_sg_id, local.worker_sg_id], var.additional_node_security_group_ids))
   key_name              = var.key_pair_name
   instance_profile_name = module.worker_iam.instance_profile_name
   cluster_name          = var.cluster_name

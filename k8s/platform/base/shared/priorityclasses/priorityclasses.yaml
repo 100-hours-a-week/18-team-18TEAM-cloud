@@ -1,0 +1,23 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: bizkit-system-critical
+value: 1000000
+globalDefault: false
+description: "Ingress, DNS, metrics, secret operator 같은 필수 시스템 워크로드 우선순위"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: bizkit-app-standard
+value: 100000
+globalDefault: false
+description: "FE, BE, AI API 같은 온라인 앱 워크로드 우선순위"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: bizkit-ai-batch
+value: 50000
+globalDefault: false
+description: "AI worker/model 같은 비동기 또는 배치성 워크로드 우선순위"
