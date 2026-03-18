@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nodelocal-dns-runtime-baseline
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: nodelocal-dns
     app.kubernetes.io/part-of: bizkit

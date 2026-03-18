@@ -79,8 +79,8 @@ spec:
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: prod-system-quota
-  namespace: prod-system
+  name: system-quota
+  namespace: system
 spec:
   hard:
     requests.cpu: "4"

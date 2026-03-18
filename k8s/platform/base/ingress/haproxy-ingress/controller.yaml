@@ -9,7 +9,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: bizkit
@@ -50,13 +50,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: haproxy-ingress
-    namespace: prod-system
+    namespace: system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]
@@ -69,7 +69,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -77,13 +77,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: haproxy-ingress
-    namespace: prod-system
+    namespace: system
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: bizkit
@@ -98,7 +98,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: bizkit
@@ -130,7 +130,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: haproxy-ingress
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: bizkit
@@ -157,9 +157,9 @@ spec:
           image: quay.io/jcmoraisjr/haproxy-ingress:v0.15.0
           imagePullPolicy: IfNotPresent
           args:
-            - --configmap=prod-system/haproxy-ingress
+            - --configmap=system/haproxy-ingress
             - --ingress-class=haproxy
-            - --publish-service=prod-system/haproxy-ingress
+            - --publish-service=system/haproxy-ingress
             - --disable-external-name=false
             - --track-old-instances
             - --watch-ingress-without-class=false

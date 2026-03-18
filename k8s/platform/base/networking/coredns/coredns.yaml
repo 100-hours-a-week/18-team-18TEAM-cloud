@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: coredns-runtime-baseline
-  namespace: prod-system
+  namespace: system
   labels:
     app.kubernetes.io/name: coredns
     app.kubernetes.io/part-of: bizkit

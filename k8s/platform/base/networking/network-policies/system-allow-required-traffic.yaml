@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: ingress-controller-allow-required-traffic
-  namespace: prod-system
+  namespace: system
 spec:
   podSelector:
     matchLabels:

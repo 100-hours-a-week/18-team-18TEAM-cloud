@@ -8,12 +8,13 @@ resources:
   - networking/network-policies/default-deny.yaml
   - networking/network-policies/dns-exceptions.yaml
   - networking/network-policies/prod-data-redis-allow-required-traffic.yaml
-  - networking/network-policies/prod-system-allow-required-traffic.yaml
-  - networking/calico/calico.yaml
+  - networking/network-policies/system-allow-required-traffic.yaml
+  - networking/calico
   - networking/coredns/coredns.yaml
   - networking/nodelocal-dns/nodelocal-dns.yaml
   - ingress/haproxy-ingress
   - autoscaling/metrics-server/metrics-server.yaml
   - secrets/external-secrets/external-secrets.yaml
+  - secrets/external-secrets/vault-auth-reviewer.yaml
   - secrets/external-secrets/vault-ca-configmap.yaml
   - secrets/external-secrets/clustersecretstore.yaml
