@@ -72,6 +72,12 @@ variable "system_pool_subnet_ids" {
   default     = []
 }
 
+variable "dev_pool_subnet_ids" {
+  description = "Optional subnet IDs dedicated to dev-pool placement. Defaults to existing_private_subnet_ids or created private subnets."
+  type        = list(string)
+  default     = []
+}
+
 variable "availability_zones" {
   description = "AZ list for the shared cluster VPC when create_vpc is true."
   type        = list(string)
@@ -203,6 +209,12 @@ variable "system_pool_instance_type" {
   default     = "t4g.large"
 }
 
+variable "dev_pool_instance_type" {
+  description = "EC2 instance type for dev-pool."
+  type        = string
+  default     = "t4g.large"
+}
+
 variable "control_plane_count" {
   description = "Initial control plane count."
   type        = number
@@ -223,6 +235,12 @@ variable "ai_serving_pool_count" {
 
 variable "system_pool_count" {
   description = "Initial system-pool node count."
+  type        = number
+  default     = 1
+}
+
+variable "dev_pool_count" {
+  description = "Initial dev-pool node count."
   type        = number
   default     = 1
 }
