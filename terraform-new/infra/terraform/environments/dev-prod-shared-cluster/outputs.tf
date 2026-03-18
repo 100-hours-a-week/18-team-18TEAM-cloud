@@ -73,6 +73,11 @@ output "worker_pools" {
       private_ips = module.system_pool.private_ips
       names       = module.system_pool.instance_names
     }
+    dev_pool = {
+      ids         = module.dev_pool.instance_ids
+      private_ips = module.dev_pool.private_ips
+      names       = module.dev_pool.instance_names
+    }
   }
   description = "Worker pool instance details."
 }

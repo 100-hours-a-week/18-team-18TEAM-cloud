@@ -37,6 +37,7 @@ locals {
   app_pool_subnet_ids      = length(var.app_pool_subnet_ids) > 0 ? var.app_pool_subnet_ids : local.private_subnet_ids
   ai_pool_subnet_ids       = length(var.ai_serving_pool_subnet_ids) > 0 ? var.ai_serving_pool_subnet_ids : local.private_subnet_ids
   system_pool_subnet_ids   = length(var.system_pool_subnet_ids) > 0 ? var.system_pool_subnet_ids : local.private_subnet_ids
+  dev_pool_subnet_ids      = length(var.dev_pool_subnet_ids) > 0 ? var.dev_pool_subnet_ids : local.private_subnet_ids
 }
 
 provider "aws" {
@@ -390,6 +391,31 @@ module "system_pool" {
   instance_profile_name = module.worker_iam.instance_profile_name
   cluster_name          = var.cluster_name
   node_pool             = "system-pool"
+  node_role             = "worker"
+  kubernetes_version    = var.kubernetes_version
+  kubernetes_channel    = var.kubernetes_channel
+  kube_reserved         = var.kube_reserved
+  system_reserved       = var.system_reserved
+  eviction_hard         = var.eviction_hard
+  volume_size           = var.root_volume_size_gib
+  volume_type           = var.root_volume_type
+  volume_encrypted      = var.root_volume_encrypted
+  tags                  = local.tags
+}
+
+module "dev_pool" {
+  source = "../../modules/ec2"
+
+  name_prefix           = "${local.name_prefix}-dev"
+  instance_count        = var.dev_pool_count
+  ami_id                = data.aws_ami.node.id
+  instance_type         = var.dev_pool_instance_type
+  subnet_ids            = local.dev_pool_subnet_ids
+  security_group_ids    = compact(concat([local.cluster_internal_sg_id, local.worker_sg_id], var.additional_node_security_group_ids))
+  key_name              = var.key_pair_name
+  instance_profile_name = module.worker_iam.instance_profile_name
+  cluster_name          = var.cluster_name
+  node_pool             = "dev-pool"
   node_role             = "worker"
   kubernetes_version    = var.kubernetes_version
   kubernetes_channel    = var.kubernetes_channel
