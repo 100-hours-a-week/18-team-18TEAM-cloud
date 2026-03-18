@@ -1,0 +1,270 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: be
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: backend
+    environment: dev
+    tier: app
+    network-role: internal-api
+  annotations:
+    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: be
+      app.kubernetes.io/part-of: bizkit
+      environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: be
+        app.kubernetes.io/part-of: bizkit
+        app.kubernetes.io/component: backend
+        environment: dev
+        tier: app
+        network-role: internal-api
+      annotations:
+        bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+        bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+        bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    spec:
+      priorityClassName: bizkit-app-standard
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      terminationGracePeriodSeconds: 30
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: be
+              app.kubernetes.io/part-of: bizkit
+              environment: dev
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: be
+                    app.kubernetes.io/part-of: bizkit
+                    environment: dev
+      containers:
+        - name: be
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-be-dev:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: be-secret
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 700m
+              memory: 1200Mi
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: be
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: backend
+    environment: dev
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: be
+    app.kubernetes.io/part-of: bizkit
+    environment: dev
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: be
+  namespace: dev
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: be
+      app.kubernetes.io/part-of: bizkit
+      environment: dev
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: be-secret
+  namespace: dev
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: bizkit-cluster-secret-store
+  target:
+    name: be-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: APP_ENV
+      remoteRef:
+        key: dev/be
+        property: APP_ENV
+    - secretKey: SPRING_DATASOURCE_URL
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_URL
+    - secretKey: SPRING_DATASOURCE_USERNAME
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_USERNAME
+    - secretKey: SPRING_DATASOURCE_PASSWORD
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_PASSWORD
+    - secretKey: SPRING_DATASOURCE_DRIVER
+      remoteRef:
+        key: dev/be
+        property: SPRING_DATASOURCE_DRIVER
+    - secretKey: REDIS_HOST
+      remoteRef:
+        key: dev/be
+        property: REDIS_HOST
+    - secretKey: REDIS_PASSWORD
+      remoteRef:
+        key: dev/be
+        property: REDIS_PASSWORD
+    - secretKey: SPRING_PROFILES_ACTIVE
+      remoteRef:
+        key: dev/be
+        property: SPRING_PROFILES_ACTIVE
+    - secretKey: SPRING_JPA_HIBERNATE_DDL_AUTO
+      remoteRef:
+        key: dev/be
+        property: SPRING_JPA_HIBERNATE_DDL_AUTO
+    - secretKey: KAKAO_CLIENT_ID
+      remoteRef:
+        key: dev/be
+        property: KAKAO_CLIENT_ID
+    - secretKey: KAKAO_CLIENT_SECRET
+      remoteRef:
+        key: dev/be
+        property: KAKAO_CLIENT_SECRET
+    - secretKey: KAKAO_REDIRECT_URIS
+      remoteRef:
+        key: dev/be
+        property: KAKAO_REDIRECT_URIS
+    - secretKey: KAKAO_ADMIN_KEY
+      remoteRef:
+        key: dev/be
+        property: KAKAO_ADMIN_KEY
+    - secretKey: JWT_SECRET
+      remoteRef:
+        key: dev/be
+        property: JWT_SECRET
+    - secretKey: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+      remoteRef:
+        key: dev/be
+        property: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+    - secretKey: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+      remoteRef:
+        key: dev/be
+        property: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+    - secretKey: CORS_ALLOWED_ORIGINS
+      remoteRef:
+        key: dev/be
+        property: CORS_ALLOWED_ORIGINS
+    - secretKey: COOKIE_SECURE
+      remoteRef:
+        key: dev/be
+        property: COOKIE_SECURE
+    - secretKey: COOKIE_SAME_SITE
+      remoteRef:
+        key: dev/be
+        property: COOKIE_SAME_SITE
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: dev/be
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: dev/be
+        property: AWS_SECRET_ACCESS_KEY
+    - secretKey: AWS_REGION
+      remoteRef:
+        key: dev/be
+        property: AWS_REGION
+    - secretKey: AWS_S3_BUCKET
+      remoteRef:
+        key: dev/be
+        property: AWS_S3_BUCKET
+    - secretKey: AWS_S3_PRESIGNED_URL_EXPIRATION_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AWS_S3_PRESIGNED_URL_EXPIRATION_SECONDS
+    - secretKey: AI_SERVER_URL
+      remoteRef:
+        key: dev/be
+        property: AI_SERVER_URL
+    - secretKey: AI_TIMEOUT_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AI_TIMEOUT_SECONDS
+    - secretKey: AI_POLL_INTERVAL_SECONDS
+      remoteRef:
+        key: dev/be
+        property: AI_POLL_INTERVAL_SECONDS
+    - secretKey: METRICS_DENY_URI_LIST
+      remoteRef:
+        key: dev/be
+        property: METRICS_DENY_URI_LIST

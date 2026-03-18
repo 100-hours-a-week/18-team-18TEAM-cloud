@@ -1,0 +1,22 @@
+# 이 파일은 실제 CRI-O 설정에 반영할 기준을 YAML로 정리한 문서다.
+# node-prep가 끝난 뒤 CRI-O 기본 설정과 비교하고, 아래 기준으로 최종 구성을 고정한다.
+
+apiVersion: bootstrap.bizkit.io/v1alpha1
+kind: CrioRuntimeProfile
+metadata:
+  name: bizkit-crio
+spec:
+  runtime: cri-o # Kubernetes CRI로 사용할 런타임
+  criSocket: unix:///var/run/crio/crio.sock # kubelet이 붙을 CRI-O 소켓 경로
+  cgroupDriver: systemd # kubelet과 CRI-O의 cgroup driver를 systemd로 맞춘다
+  sandboxImage: registry.k8s.io/pause:3.10 # pod sandbox 이미지
+  defaultRuntimeName: runc # 일반 워크로드 기본 런타임
+  systemdCgroup: true # cgroup v2 환경과 systemd 관리 방식에 맞춘 설정
+  maxConcurrentDownloads: 3 # 작은 시작 노드에서 이미지 pull 경쟁이 과도해지지 않게 제한
+  registryMirrors: [] # 사내 mirror를 둘 계획이 없으면 비워둔다
+  storageDriver: overlay # 기본 스토리지 드라이버
+  pinnedImages: [] # 별도로 pinning할 이미지가 없으면 비워둔다
+  notes:
+    - "cp-1은 2vCPU/4Gi 시작이므로 과도한 동시 pull과 불필요한 plugin 활성화를 피한다."
+    - "worker는 arm64(t4g 계열) 기준 이미지 호환성을 먼저 확인한다."
+    - "실제 적용 파일은 CRI-O 설정 파일이며, 이 YAML은 팀 합의용 기준 문서로 본다."
