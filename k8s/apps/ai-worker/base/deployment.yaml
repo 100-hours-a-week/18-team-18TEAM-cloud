@@ -42,7 +42,7 @@ spec:
       priorityClassName: bizkit-ai-batch
       terminationGracePeriodSeconds: 60
       nodeSelector:
-        nodepool: ai-serving-pool
+        node-pool: ai-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname

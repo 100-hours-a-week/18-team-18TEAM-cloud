@@ -70,7 +70,13 @@ spec:
     spec:
       priorityClassName: bizkit-system-critical
       serviceAccountName: metrics-server
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: system
+          effect: NoSchedule
       nodeSelector:
+        node-pool: system
         kubernetes.io/os: linux
       containers:
         - name: metrics-server

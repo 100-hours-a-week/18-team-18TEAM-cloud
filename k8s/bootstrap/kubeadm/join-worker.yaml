@@ -15,9 +15,9 @@ nodeRegistration:
     - name: "node-ip"
       value: "" # TODO(B): 이 worker 노드의 실제 private IP
     # - name: "node-labels"
-    #   value: "" # TODO(A): app-pool / ai-serving-pool / system-pool 라벨 규칙이 확정되면 입력
+    #   value: "" # TODO(A): dev / app-pool / ai-pool / system node-pool 라벨 규칙에 맞춰 입력
     # - name: "register-with-taints"
-    #   value: "" # TODO(A): 특정 pool 전용 taint를 노드 등록 시점부터 강제할 때 사용
+    #   value: "" # TODO(A): dedicated=system:NoSchedule 같은 전용 taint를 노드 등록 시점부터 강제할 때 사용
   ignorePreflightErrors: [] # 특별히 무시할 사전 점검 에러가 없으면 빈 배열 유지
   imagePullPolicy: "IfNotPresent" # 필요한 이미지가 로컬에 없을 때만 내려받음
   imagePullSerial: true # 초기 이미지 pull 부하를 줄이기 위해 순차 pull 유지

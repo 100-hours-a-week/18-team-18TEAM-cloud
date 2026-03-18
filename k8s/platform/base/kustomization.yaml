@@ -11,7 +11,9 @@ resources:
   - networking/network-policies/system-allow-required-traffic.yaml
   - networking/calico
   - networking/coredns/coredns.yaml
+  - networking/coredns/runtime-deployment.yaml
   - networking/nodelocal-dns/nodelocal-dns.yaml
+  - networking/nodelocal-dns/runtime-daemonset.yaml
   - ingress/haproxy-ingress
   - autoscaling/metrics-server/metrics-server.yaml
   - secrets/external-secrets/external-secrets.yaml

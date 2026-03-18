@@ -10,13 +10,13 @@ metadata:
 data:
   replicas: "2"
   request_cpu: "100m"
-  request_memory: "170Mi"
+  request_memory: "70Mi"
   limit_cpu: "300m"
-  limit_memory: "300Mi"
+  limit_memory: "170Mi"
   priorityClassName: "bizkit-system-critical"
   notes: |
-    kubeadm 기본 CoreDNS를 완전히 대체할지, kube-system 기본 설치본을 patch할지는 아직 정해지지 않았다.
+    실제 운영 Deployment는 runtime-deployment.yaml에 선언한다.
     현재 파일은 운영 baseline을 고정한다.
     - 최소 replica 2
-    - system-pool 우선
-    - anti-affinity 권장
+    - system node 1개 + dns-role=fallback(app-1) 1개 배치
+    - anti-affinity 유지

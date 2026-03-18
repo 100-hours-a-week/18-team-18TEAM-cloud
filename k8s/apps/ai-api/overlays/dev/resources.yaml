@@ -41,11 +41,9 @@ spec:
         bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
     spec:
       priorityClassName: bizkit-app-standard
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
       terminationGracePeriodSeconds: 30
+      nodeSelector:
+        node-pool: dev
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
