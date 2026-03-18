@@ -15,7 +15,6 @@ resources:
   - networking/nodelocal-dns/nodelocal-dns.yaml
   - networking/nodelocal-dns/runtime-daemonset.yaml
   - ingress/haproxy-ingress
-  - autoscaling/metrics-server/metrics-server.yaml
   - secrets/external-secrets/external-secrets.yaml
   - secrets/external-secrets/vault-auth-reviewer.yaml
   - secrets/external-secrets/vault-ca-configmap.yaml
