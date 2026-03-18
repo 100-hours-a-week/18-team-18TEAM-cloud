@@ -1,22 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - platform/base
+  - platform/overlays/prod
   - apps/fe/base
   - apps/fe/overlays/prod
-  - apps/fe/overlays/dev
   - apps/be/base
   - apps/be/overlays/prod
-  - apps/be/overlays/dev
   - apps/ai-api/base
   - apps/ai-api/overlays/prod
-  - apps/ai-api/overlays/dev
   - apps/ai-model/base
   - apps/ai-model/overlays/prod
-  - apps/ai-model/overlays/dev
   - apps/ai-worker/base
   - apps/ai-worker/overlays/prod
-  - apps/ai-worker/overlays/dev
 patches:
   - path: patches/fe-replicas.yaml
   - path: patches/be-replicas.yaml
