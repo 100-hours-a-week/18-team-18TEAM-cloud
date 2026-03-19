@@ -4,4 +4,4 @@ metadata:
   name: be
   namespace: prod-be
 spec:
-  replicas: 2
+  replicas: 1

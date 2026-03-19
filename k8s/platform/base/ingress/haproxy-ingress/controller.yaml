@@ -136,7 +136,7 @@ metadata:
     app.kubernetes.io/part-of: bizkit
     app.kubernetes.io/component: ingress
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: haproxy-ingress
@@ -152,14 +152,29 @@ spec:
       serviceAccountName: haproxy-ingress
       priorityClassName: bizkit-system-critical
       terminationGracePeriodSeconds: 60
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: system
+          effect: NoSchedule
+      nodeSelector:
+        node-pool: system
       containers:
         - name: controller
           image: quay.io/jcmoraisjr/haproxy-ingress:v0.15.0
           imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           args:
             - --configmap=system/haproxy-ingress
             - --ingress-class=haproxy
-            - --publish-service=system/haproxy-ingress
             - --disable-external-name=false
             - --track-old-instances
             - --watch-ingress-without-class=false

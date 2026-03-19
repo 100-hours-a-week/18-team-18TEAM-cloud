@@ -42,7 +42,7 @@ spec:
       priorityClassName: bizkit-ai-batch
       terminationGracePeriodSeconds: 60
       nodeSelector:
-        nodepool: ai-serving-pool
+        node-pool: ai-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -65,7 +65,7 @@ spec:
                     environment: prod
       containers:
         - name: ai-worker
-          image: REPLACE_ME_AI_WORKER_IMAGE
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-prod:prod-1.0.0-deea488-11-1
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:

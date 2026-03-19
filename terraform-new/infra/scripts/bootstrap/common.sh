@@ -63,7 +63,7 @@ EOF
 
 install_base_packages() {
   apt-get update
-  apt-get install -y apt-transport-https ca-certificates curl gpg jq software-properties-common
+  apt-get install -y apt-transport-https ca-certificates curl git golang-go gpg jq software-properties-common
 }
 
 install_kubernetes_packages() {
@@ -107,6 +107,36 @@ write_kubelet_defaults() {
 KUBE_RESERVED="${KUBE_RESERVED:-cpu=150m,memory=400Mi,ephemeral-storage=1Gi}"
 SYSTEM_RESERVED="${SYSTEM_RESERVED:-cpu=150m,memory=600Mi,ephemeral-storage=1Gi}"
 EVICTION_HARD="${EVICTION_HARD:-memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%}"
+ECR_CREDENTIAL_PROVIDER_VERSION="${ECR_CREDENTIAL_PROVIDER_VERSION:-v1.33.3}"
+EOF
+}
+
+install_ecr_credential_provider() {
+  local provider_version="${ECR_CREDENTIAL_PROVIDER_VERSION:-v1.33.3}"
+
+  mkdir -p /opt/ecr-credential-provider/bin /etc/kubernetes/image-credential-provider
+
+  GOBIN=/opt/ecr-credential-provider/bin \
+    GO111MODULE=on \
+    GOPROXY=https://proxy.golang.org,direct \
+    CGO_ENABLED=0 \
+    go install "k8s.io/cloud-provider-aws/cmd/ecr-credential-provider@${provider_version}"
+
+  cat >/etc/kubernetes/image-credential-provider/ecr-credential-provider.yaml <<'EOF'
+apiVersion: kubelet.config.k8s.io/v1
+kind: CredentialProviderConfig
+providers:
+- name: ecr-credential-provider
+  matchImages:
+  - "*.dkr.ecr.*.amazonaws.com"
+  - "*.dkr.ecr.*.amazonaws.com.cn"
+  - "*.dkr.ecr-fips.*.amazonaws.com"
+  defaultCacheDuration: "12h"
+  apiVersion: credentialprovider.kubelet.k8s.io/v1
+EOF
+
+  cat >/etc/default/kubelet <<'EOF'
+KUBELET_EXTRA_ARGS="--image-credential-provider-config=/etc/kubernetes/image-credential-provider/ecr-credential-provider.yaml --image-credential-provider-bin-dir=/opt/ecr-credential-provider/bin"
 EOF
 }
 
@@ -141,7 +171,11 @@ bootstrap_common_node() {
   log "Writing kubelet defaults"
   write_kubelet_defaults
 
+  log "Installing kubelet ECR credential provider"
+  install_ecr_credential_provider
+
   log "Enabling kubelet"
+  systemctl daemon-reload
   systemctl enable kubelet
 
   log "Bootstrap common node step completed"

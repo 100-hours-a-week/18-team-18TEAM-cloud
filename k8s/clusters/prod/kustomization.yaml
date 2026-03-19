@@ -11,9 +11,6 @@ resources:
   - apps/ai-api/base
   - apps/ai-api/overlays/prod
   - apps/ai-api/overlays/dev
-  - apps/ai-model/base
-  - apps/ai-model/overlays/prod
-  - apps/ai-model/overlays/dev
   - apps/ai-worker/base
   - apps/ai-worker/overlays/prod
   - apps/ai-worker/overlays/dev
@@ -21,5 +18,4 @@ patches:
   - path: patches/fe-replicas.yaml
   - path: patches/be-replicas.yaml
   - path: patches/ai-api-replicas.yaml
-  - path: patches/ai-model-replicas.yaml
   - path: patches/ai-worker-replicas.yaml

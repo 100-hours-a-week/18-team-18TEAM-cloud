@@ -42,7 +42,7 @@ spec:
       priorityClassName: bizkit-app-standard
       terminationGracePeriodSeconds: 30
       nodeSelector:
-        nodepool: app-pool
+        node-pool: app-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -65,7 +65,7 @@ spec:
                     environment: prod
       containers:
         - name: ai-api
-          image: REPLACE_ME_AI_API_IMAGE
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-prod:prod-1.0.0-deea488-11-1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -76,7 +76,7 @@ spec:
                 name: ai-api-secret
           readinessProbe:
             httpGet:
-              path: /ai/ready
+              path: /ai/health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10

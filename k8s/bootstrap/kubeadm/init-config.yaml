@@ -27,9 +27,9 @@ nodeRegistration:
     - name: "eviction-hard"
       value: "memory.available<500Mi,nodefs.available<10%,imagefs.available<15%,nodefs.inodesFree<5%" # 노드 여유 자원이 이 기준 아래로 내려가면 kubelet이 파드를 강제 축출
     # - name: "node-labels"
-    #   value: "" # TODO(A): node pool 라벨 체계가 확정되면 worker 노드 등록 방식에 맞춰 사용
+    #   value: "" # TODO(A): node-pool 라벨 체계(dev/app-pool/ai-pool/system)에 맞춰 worker 노드 등록 방식에 사용
     # - name: "register-with-taints"
-    #   value: "" # TODO(A): ai-serving-pool, system-pool 전용 taint를 kubelet 등록 시점에 줄지 결정되면 사용
+    #   value: "" # TODO(A): dedicated=system:NoSchedule 같은 전용 taint를 kubelet 등록 시점에 줄지 결정되면 사용
   ignorePreflightErrors: [] # kubeadm 사전 점검에서 예외로 넘길 항목 목록. 특별한 사유가 없으면 비워둠
   imagePullPolicy: "IfNotPresent" # 필요한 이미지가 로컬에 없을 때만 가져오도록 하는 정책
   imagePullSerial: true # 이미지를 한 번에 병렬로 받지 않고 순서대로 받아 초기 부하를 줄임

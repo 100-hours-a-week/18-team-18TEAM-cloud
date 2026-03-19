@@ -4,4 +4,4 @@ metadata:
   name: ai-worker
   namespace: prod-ai
 spec:
-  replicas: 2
+  replicas: 1
