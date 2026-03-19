@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: bizkit-prod
+  namespace: system
+spec:
+  description: Root GitOps project for the BizKit prod cluster.
+  sourceRepos:
+    - https://github.com/100-hours-a-week/18-team-18TEAM-cloud.git
+  destinations:
+    - namespace: system
+      server: https://kubernetes.default.svc
+    - namespace: dev
+      server: https://kubernetes.default.svc
+    - namespace: prod-fe
+      server: https://kubernetes.default.svc
+    - namespace: prod-be
+      server: https://kubernetes.default.svc
+    - namespace: prod-ai-api
+      server: https://kubernetes.default.svc
+    - namespace: prod-ai
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

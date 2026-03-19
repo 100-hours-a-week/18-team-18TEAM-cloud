@@ -1,17 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: bizkit-public-ingress
+  name: bizkit-dev-ingress
   namespace: system
   labels:
-    app.kubernetes.io/name: bizkit-ingress
+    app.kubernetes.io/name: bizkit-dev-ingress
     app.kubernetes.io/part-of: bizkit
     app.kubernetes.io/component: ingress
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: cardcaro.com
+    external-dns.alpha.kubernetes.io/hostname: dev.cardcaro.com
     bizkit.io/git-sha: REPLACE_ME_GIT_SHA
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    haproxy-ingress.github.io/allowlist-source-header: "CF-Connecting-IP"
+    haproxy-ingress.github.io/allowlist-source-range: "54.116.28.173/32,10.0.255.30/32"
     haproxy-ingress.github.io/timeout-connect: "60s"
     haproxy-ingress.github.io/timeout-http-request: "15s"
     haproxy-ingress.github.io/timeout-keep-alive: "75s"
@@ -19,27 +21,27 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-    - host: cardcaro.com
+    - host: dev.cardcaro.com
       http:
         paths:
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: be-prod-proxy
+                name: be-dev-proxy
                 port:
                   number: 8080
           - path: /ai
             pathType: Prefix
             backend:
               service:
-                name: ai-api-prod-proxy
+                name: ai-api-dev-proxy
                 port:
                   number: 8000
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: fe-prod-proxy
+                name: fe-dev-proxy
                 port:
                   number: 3000
