@@ -1,16 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: bizkit-public-websocket-ingress
+  name: bizkit-dev-websocket-ingress
   namespace: system
   labels:
-    app.kubernetes.io/name: bizkit-websocket-ingress
+    app.kubernetes.io/name: bizkit-dev-websocket-ingress
     app.kubernetes.io/part-of: bizkit
     app.kubernetes.io/component: ingress
   annotations:
     bizkit.io/git-sha: REPLACE_ME_GIT_SHA
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    haproxy-ingress.github.io/allowlist-source-header: "CF-Connecting-IP"
+    haproxy-ingress.github.io/allowlist-source-range: "54.116.28.173/32,10.0.255.30/32"
     haproxy-ingress.github.io/timeout-connect: "60s"
     haproxy-ingress.github.io/timeout-http-request: "15s"
     haproxy-ingress.github.io/timeout-server: "1h"
@@ -18,13 +20,13 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-    - host: cardcaro.com
+    - host: dev.cardcaro.com
       http:
         paths:
           - path: /api/ws
             pathType: Prefix
             backend:
               service:
-                name: be-prod-proxy
+                name: be-dev-proxy
                 port:
                   number: 8080

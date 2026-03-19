@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bizkit-fe-prod
+  namespace: system
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: bizkit-prod
+  source:
+    repoURL: https://github.com/100-hours-a-week/18-team-18TEAM-cloud.git
+    targetRevision: main
+    path: k8s/clusters/fe-prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod-fe
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+
