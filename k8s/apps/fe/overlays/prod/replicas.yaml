@@ -4,4 +4,4 @@ metadata:
   name: fe
   namespace: prod-fe
 spec:
-  replicas: 2
+  replicas: 0

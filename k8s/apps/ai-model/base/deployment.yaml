@@ -42,7 +42,12 @@ spec:
       priorityClassName: bizkit-ai-batch
       terminationGracePeriodSeconds: 60
       nodeSelector:
-        node-pool: ai-pool
+        node-pool: ai-serving-pool
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: model
+          effect: NoSchedule
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -53,6 +58,16 @@ spec:
               app.kubernetes.io/part-of: bizkit
               environment: prod
       affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodepool
+                    operator: In
+                    values: ["ai-serving-pool"]
+                  - key: dedicated
+                    operator: In
+                    values: ["model"]
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
@@ -65,7 +80,7 @@ spec:
                     environment: prod
       containers:
         - name: ai-model
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-prod:prod-1.0.0-deea488-11-1
+          image: REPLACE_ME_AI_MODEL_IMAGE
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

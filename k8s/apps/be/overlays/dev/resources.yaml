@@ -15,7 +15,7 @@ metadata:
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -77,7 +77,7 @@ spec:
                 name: be-secret
           readinessProbe:
             httpGet:
-              path: /api/ready
+              path: /actuator/health
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10

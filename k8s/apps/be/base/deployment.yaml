@@ -76,7 +76,7 @@ spec:
                 name: be-secret
           readinessProbe:
             httpGet:
-              path: /api/ready
+              path: /actuator/health
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10

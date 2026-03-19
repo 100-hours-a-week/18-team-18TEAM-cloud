@@ -4,4 +4,4 @@ metadata:
   name: ai-api
   namespace: prod-ai-api
 spec:
-  replicas: 2
+  replicas: 1

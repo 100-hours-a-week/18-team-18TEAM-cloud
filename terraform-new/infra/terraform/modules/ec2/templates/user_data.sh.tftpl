@@ -24,7 +24,7 @@ sysctl --system
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y apt-transport-https ca-certificates curl gpg jq software-properties-common
+apt-get install -y apt-transport-https ca-certificates curl git golang-go gpg jq software-properties-common
 
 mkdir -p /etc/apt/keyrings
 curl -fsSL "https://pkgs.k8s.io/core:/stable:/${kubernetes_channel}/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -43,9 +43,35 @@ apt-get update
 apt-get install -y cri-o kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
+# Match the live hotfix: let kubelet fetch ECR auth dynamically from the node IAM role.
+mkdir -p /opt/ecr-credential-provider/bin /etc/kubernetes/image-credential-provider
+GOBIN=/opt/ecr-credential-provider/bin \
+  GO111MODULE=on \
+  GOPROXY=https://proxy.golang.org,direct \
+  CGO_ENABLED=0 \
+  go install k8s.io/cloud-provider-aws/cmd/ecr-credential-provider@v1.33.3
+
+cat >/etc/kubernetes/image-credential-provider/ecr-credential-provider.yaml <<'EOF'
+apiVersion: kubelet.config.k8s.io/v1
+kind: CredentialProviderConfig
+providers:
+- name: ecr-credential-provider
+  matchImages:
+  - "*.dkr.ecr.*.amazonaws.com"
+  - "*.dkr.ecr.*.amazonaws.com.cn"
+  - "*.dkr.ecr-fips.*.amazonaws.com"
+  defaultCacheDuration: "12h"
+  apiVersion: credentialprovider.kubelet.k8s.io/v1
+EOF
+
+cat >/etc/default/kubelet <<'EOF'
+KUBELET_EXTRA_ARGS="--image-credential-provider-config=/etc/kubernetes/image-credential-provider/ecr-credential-provider.yaml --image-credential-provider-bin-dir=/opt/ecr-credential-provider/bin"
+EOF
+
 systemctl enable crio
 systemctl restart crio
 systemctl disable --now containerd 2>/dev/null || true
+systemctl daemon-reload
 systemctl enable kubelet
 
 mkdir -p /etc/bizkit
@@ -58,6 +84,7 @@ CONTAINER_RUNTIME="crio"
 KUBE_RESERVED="${kube_reserved}"
 SYSTEM_RESERVED="${system_reserved}"
 EVICTION_HARD="${eviction_hard}"
+ECR_CREDENTIAL_PROVIDER_VERSION="v1.33.3"
 EOF
 
 cat >/etc/motd <<EOF

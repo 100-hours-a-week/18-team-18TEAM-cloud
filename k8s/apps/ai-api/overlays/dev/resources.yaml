@@ -77,7 +77,7 @@ spec:
                 name: ai-api-secret
           readinessProbe:
             httpGet:
-              path: /ai/ready
+              path: /ai/health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10

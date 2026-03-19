@@ -14,14 +14,8 @@ spec:
     - Egress
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: prod-ai
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: ai-model
-              app.kubernetes.io/part-of: bizkit
-              environment: prod
+        - ipBlock:
+            cidr: 10.0.2.15/32
       ports:
         - protocol: TCP
           port: 8001
