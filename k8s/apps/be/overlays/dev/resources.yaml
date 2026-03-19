@@ -15,7 +15,7 @@ metadata:
     bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
     bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
 spec:
-  replicas: 0
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -43,7 +43,7 @@ spec:
       priorityClassName: bizkit-app-standard
       terminationGracePeriodSeconds: 30
       nodeSelector:
-        node-pool: dev
+        node-pool: app-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
