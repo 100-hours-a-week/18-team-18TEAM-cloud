@@ -15,6 +15,6 @@ data:
   limit_cpu: "200m"
   limit_memory: "128Mi"
   notes: |
+    실제 DaemonSet은 runtime-daemonset.yaml에 선언한다.
     NodeLocal DNSCache는 DaemonSet 기준으로 모든 worker node에 1개씩 배치한다.
-    실제 daemonset bundle은 kubeadm/kube-proxy/coredns 설치 방식과 함께 반입해야 하므로,
-    현재 파일은 런타임 baseline을 고정하는 목적이다.
+    control-plane은 제외하고, system taint는 toleration으로 수용한다.

@@ -1,9 +1,9 @@
 apiVersion: kubeadm.k8s.io/v1beta4 # kubeadm이 이 파일을 어떤 스키마로 읽을지 정하는 버전
 kind: ClusterConfiguration # 클러스터 전체 공통 설정을 담는 문서 타입
 
-clusterName: bizkit-cluster # 클러스터 이름
+clusterName: bizkit-prod-cluster # 클러스터 이름
 kubernetesVersion: v1.33.9 # 설치할 Kubernetes 버전
-controlPlaneEndpoint: "k8s-api.bizkit.internal:6443" # control plane 공통 진입점. kube-apiserver 앞단의 고정 DNS 또는 VIP 주소
+controlPlaneEndpoint: "k8s-api.prod.bizkit.private:6443" # control plane 공통 진입점. kube-apiserver 앞단의 고정 DNS 또는 VIP 주소
 
 networking:
   dnsDomain: cluster.local # 클러스터 내부 서비스 DNS suffix
@@ -12,7 +12,7 @@ networking:
 
 apiServer:
   certSANs: # API server 인증서가 유효해야 하는 접속 주소 목록
-    - k8s-api.bizkit.internal # controlPlaneEndpoint DNS
+    - k8s-api.prod.bizkit.private # controlPlaneEndpoint DNS
     # TODO(B): cp-1의 실제 private IP 추가
 
 controllerManager: # kube-controller-manager 프로세스 옵션. 1차 구축에서는 기본값 사용

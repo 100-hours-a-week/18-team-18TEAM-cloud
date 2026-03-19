@@ -41,11 +41,9 @@ spec:
         bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
     spec:
       priorityClassName: bizkit-app-standard
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
       terminationGracePeriodSeconds: 30
+      nodeSelector:
+        node-pool: dev
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -68,7 +66,7 @@ spec:
                     environment: dev
       containers:
         - name: ai-api
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-dev:latest
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-dev:dev-1.0.0-d9a8ef3
           imagePullPolicy: Always
           ports:
             - name: http

@@ -42,7 +42,7 @@ spec:
       priorityClassName: bizkit-app-standard
       terminationGracePeriodSeconds: 30
       nodeSelector:
-        nodepool: app-pool
+        node-pool: app-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -65,7 +65,7 @@ spec:
                     environment: prod
       containers:
         - name: be
-          image: REPLACE_ME_BE_IMAGE
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-be-prod:prod-1.30.2-67ec76c-14-1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
