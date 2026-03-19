@@ -11,8 +11,8 @@ metadata:
     tier: app
     network-role: public-entry
   annotations:
-    bizkit.io/git-sha: 28778563c2ade8f274982bd1f912c082cabfba49
-    bizkit.io/deployed-at: 2026-03-19T11:34:49Z
+    bizkit.io/git-sha: d8def4587b4bae7f1792e64ef48abfc0c1bc90c1
+    bizkit.io/deployed-at: 2026-03-19T13:37:43Z
     bizkit.io/deployed-by: yeiin
 spec:
   replicas: 1
@@ -36,8 +36,8 @@ spec:
         tier: app
         network-role: public-entry
       annotations:
-        bizkit.io/git-sha: 28778563c2ade8f274982bd1f912c082cabfba49
-        bizkit.io/deployed-at: 2026-03-19T11:34:49Z
+        bizkit.io/git-sha: d8def4587b4bae7f1792e64ef48abfc0c1bc90c1
+        bizkit.io/deployed-at: 2026-03-19T13:37:43Z
         bizkit.io/deployed-by: yeiin
     spec:
       priorityClassName: bizkit-app-standard
@@ -66,7 +66,7 @@ spec:
                     environment: dev
       containers:
         - name: fe
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-dev:dev-1.7.0-dev.2-2877856
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-dev:dev-1.7.0-dev.3-d8def45
           imagePullPolicy: Always
           ports:
             - name: http
