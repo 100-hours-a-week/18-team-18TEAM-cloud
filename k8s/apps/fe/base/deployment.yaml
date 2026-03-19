@@ -65,8 +65,8 @@ spec:
                     environment: prod
       containers:
         - name: fe
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-prod:prod-1.6.0-1b7ecc2
-          imagePullPolicy: IfNotPresent
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-prod:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 3000

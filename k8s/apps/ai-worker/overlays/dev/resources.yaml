@@ -73,11 +73,11 @@ spec:
                 name: ai-worker-secret
           resources:
             requests:
-              cpu: 400m
-              memory: 700Mi
+              cpu: 200m
+              memory: 384Mi
             limits:
-              cpu: 1000m
-              memory: 1228Mi
+              cpu: 700m
+              memory: 896Mi
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
