@@ -19,10 +19,21 @@ metadata:
     haproxy-ingress.github.io/timeout-tunnel: "1h"
 spec:
   ingressClassName: haproxy
+  tls:
+    - hosts:
+        - dev.cardcaro.com
+      secretName: cardcaro-com-tls
   rules:
     - host: dev.cardcaro.com
       http:
         paths:
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: be-dev-proxy
+                port:
+                  number: 8080
           - path: /api/ws
             pathType: Prefix
             backend:
