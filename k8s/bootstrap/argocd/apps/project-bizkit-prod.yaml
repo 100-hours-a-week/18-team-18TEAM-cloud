@@ -8,6 +8,8 @@ spec:
   sourceRepos:
     - https://github.com/100-hours-a-week/18-team-18TEAM-cloud.git
   destinations:
+    - namespace: kube-system
+      server: https://kubernetes.default.svc
     - namespace: system
       server: https://kubernetes.default.svc
     - namespace: dev
@@ -19,6 +21,8 @@ spec:
     - namespace: prod-ai-api
       server: https://kubernetes.default.svc
     - namespace: prod-ai
+      server: https://kubernetes.default.svc
+    - namespace: prod-data
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: "*"
