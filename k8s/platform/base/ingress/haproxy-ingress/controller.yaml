@@ -152,13 +152,11 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       priorityClassName: bizkit-system-critical
       terminationGracePeriodSeconds: 60
-      tolerations:
-        - key: dedicated
-          operator: Equal
-          value: system
-          effect: NoSchedule
+      # 임시 복구: system 노드 네트워크 이슈로 ingress를 app 노드에 배치
+      # 서비스 정상화 후 원복 필요
+      tolerations: []
       nodeSelector:
-        node-pool: system
+        node-pool: app-pool
       containers:
         - name: controller
           image: quay.io/jcmoraisjr/haproxy-ingress:v0.15.0
