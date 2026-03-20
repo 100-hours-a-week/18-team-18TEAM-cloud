@@ -17,6 +17,10 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: system
+        - ipBlock:
+            cidr: 10.0.0.0/16
+        - ipBlock:
+            cidr: 10.244.0.0/16
       ports:
         - protocol: TCP
           port: 3000
@@ -33,6 +37,12 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+    - to:
+        - ipBlock:
+            cidr: 10.0.4.37/32
+      ports:
+        - protocol: TCP
+          port: 6379
     - to:
         - namespaceSelector:
             matchLabels:
