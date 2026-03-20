@@ -19,6 +19,10 @@ metadata:
     haproxy-ingress.github.io/timeout-server: "300s"
 spec:
   ingressClassName: haproxy
+  tls:
+    - hosts:
+        - argocd.cardcaro.com
+      secretName: cardcaro-com-tls
   rules:
     - host: argocd.cardcaro.com
       http:

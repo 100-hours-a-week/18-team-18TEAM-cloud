@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cardcaro-com-tls
+  namespace: system
+spec:
+  secretName: cardcaro-com-tls
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  commonName: cardcaro.com
+  dnsNames:
+    - cardcaro.com
+    - "*.cardcaro.com"
