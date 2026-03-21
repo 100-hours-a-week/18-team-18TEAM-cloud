@@ -1,0 +1,69 @@
+crds:
+  install: true
+
+global:
+  addPrometheusAnnotations: false
+
+configs:
+  params:
+    server.insecure: true
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+redis-ha:
+  enabled: false
+
+controller:
+  replicas: 1
+  nodeSelector:
+    node-pool: system
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: system
+      effect: NoSchedule
+
+server:
+  replicas: 1
+  service:
+    type: ClusterIP
+  nodeSelector:
+    node-pool: system
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: system
+      effect: NoSchedule
+
+repoServer:
+  replicas: 1
+  nodeSelector:
+    node-pool: system
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: system
+      effect: NoSchedule
+
+applicationSet:
+  replicaCount: 1
+  nodeSelector:
+    node-pool: system
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: system
+      effect: NoSchedule
+
+redis:
+  nodeSelector:
+    node-pool: system
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: system
+      effect: NoSchedule

@@ -5,3 +5,4 @@ resources:
   - backend-services.yaml
   - shared-ingress.yaml
   - websocket-ingress.yaml
+  - argocd-ingress.yaml

@@ -9,6 +9,7 @@ resources:
   - networking/network-policies/dns-exceptions.yaml
   - networking/network-policies/prod-data-redis-allow-required-traffic.yaml
   - networking/network-policies/system-allow-required-traffic.yaml
+  - networking/network-policies/system-external-secrets-allow-required-traffic.yaml
   - networking/calico
   - networking/coredns/coredns.yaml
   - networking/coredns/runtime-deployment.yaml

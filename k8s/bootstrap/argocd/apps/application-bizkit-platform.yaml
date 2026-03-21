@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bizkit-platform
+  namespace: system
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: bizkit-prod
+  source:
+    repoURL: https://github.com/100-hours-a-week/18-team-18TEAM-cloud.git
+    targetRevision: main
+    path: k8s/clusters/platform
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: system
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
