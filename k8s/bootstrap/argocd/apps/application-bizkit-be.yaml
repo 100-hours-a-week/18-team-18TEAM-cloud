@@ -16,9 +16,16 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: system
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      jsonPointers:
+        - /metadata/annotations/force-sync
+        - /metadata/annotations/reconcile-time
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=false
+      - ServerSideApply=true
