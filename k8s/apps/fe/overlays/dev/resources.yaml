@@ -11,9 +11,9 @@ metadata:
     tier: app
     network-role: public-entry
   annotations:
-    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
-    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
-    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    bizkit.io/git-sha: d8def4587b4bae7f1792e64ef48abfc0c1bc90c1
+    bizkit.io/deployed-at: 2026-03-19T13:37:43Z
+    bizkit.io/deployed-by: yeiin
 spec:
   replicas: 1
   strategy:
@@ -36,9 +36,9 @@ spec:
         tier: app
         network-role: public-entry
       annotations:
-        bizkit.io/git-sha: REPLACE_ME_GIT_SHA
-        bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
-        bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+        bizkit.io/git-sha: d8def4587b4bae7f1792e64ef48abfc0c1bc90c1
+        bizkit.io/deployed-at: 2026-03-19T13:37:43Z
+        bizkit.io/deployed-by: yeiin
     spec:
       priorityClassName: bizkit-app-standard
       terminationGracePeriodSeconds: 30
@@ -66,7 +66,7 @@ spec:
                     environment: dev
       containers:
         - name: fe
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-dev:dev-1.2.1-dev.1-0cc2724
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-fe-dev:dev-1.7.0-dev.3-d8def45
           imagePullPolicy: Always
           ports:
             - name: http
@@ -99,11 +99,11 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 10"]
           resources:
             requests:
-              cpu: 300m
-              memory: 512Mi
+              cpu: 150m
+              memory: 256Mi
             limits:
-              cpu: 700m
-              memory: 1Gi
+              cpu: 500m
+              memory: 768Mi
 ---
 apiVersion: v1
 kind: Service

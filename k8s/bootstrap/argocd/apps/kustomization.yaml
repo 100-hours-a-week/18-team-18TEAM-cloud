@@ -6,3 +6,5 @@ resources:
   - application-bizkit-platform.yaml
   - application-bizkit-be.yaml
   - application-bizkit-ai.yaml
+  - application-bizkit-fe-prod.yaml
+  - application-bizkit-fe-dev.yaml

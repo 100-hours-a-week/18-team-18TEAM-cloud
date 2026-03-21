@@ -3,6 +3,10 @@ kind: Kustomization
 resources:
   - controller.yaml
   - backend-services.yaml
+  - clusterissuer-letsencrypt-cloudflare.yaml
+  - certificate-cardcaro-com.yaml
   - shared-ingress.yaml
+  - dev-ingress.yaml
   - websocket-ingress.yaml
+  - dev-websocket-ingress.yaml
   - argocd-ingress.yaml

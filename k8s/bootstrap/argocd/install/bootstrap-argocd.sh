@@ -14,7 +14,6 @@ kubectl apply -k "${SCRIPT_DIR}"
 
 helm repo add argo https://argoproj.github.io/argo-helm >/dev/null 2>&1 || true
 helm repo update argo
-
 HELM_ARGS=(
   upgrade --install "${RELEASE_NAME}" "${CHART}"
   --namespace "${NAMESPACE}"

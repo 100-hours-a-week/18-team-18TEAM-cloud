@@ -99,11 +99,11 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 10"]
           resources:
             requests:
-              cpu: 700m
-              memory: 1200Mi
+              cpu: 250m
+              memory: 768Mi
             limits:
-              cpu: 1500m
-              memory: 2Gi
+              cpu: 900m
+              memory: 1536Mi
 ---
 apiVersion: v1
 kind: Service
