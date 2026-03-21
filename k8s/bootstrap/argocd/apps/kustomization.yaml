@@ -3,5 +3,8 @@ kind: Kustomization
 resources:
   - project-bizkit-prod.yaml
   - application-bizkit-prod-root.yaml
+  - application-bizkit-platform.yaml
+  - application-bizkit-be.yaml
+  - application-bizkit-ai.yaml
   - application-bizkit-fe-prod.yaml
   - application-bizkit-fe-dev.yaml

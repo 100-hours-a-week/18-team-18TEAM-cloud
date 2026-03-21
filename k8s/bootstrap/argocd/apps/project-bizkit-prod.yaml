@@ -3,8 +3,10 @@ kind: AppProject
 metadata:
   name: bizkit-prod
   namespace: system
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
-  description: Root GitOps project for the BizKit prod cluster.
+  description: GitOps project for the BizKit shared production cluster.
   sourceRepos:
     - https://github.com/100-hours-a-week/18-team-18TEAM-cloud.git
   destinations:

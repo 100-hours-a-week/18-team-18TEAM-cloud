@@ -43,7 +43,7 @@ spec:
       priorityClassName: bizkit-app-standard
       terminationGracePeriodSeconds: 30
       nodeSelector:
-        node-pool: dev
+        node-pool: app-pool
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
