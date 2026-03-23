@@ -73,6 +73,16 @@ spec:
           envFrom:
             - secretRef:
                 name: ai-worker-secret
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -lc
+                  - |
+                    mkdir -p /app/fonts
+                    ln -sf /usr/share/fonts/truetype/nanum/NanumGothic.ttf /app/fonts/NanumGothic-Regular.ttf
+                    ln -sf /usr/share/fonts/truetype/nanum/NanumGothicBold.ttf /app/fonts/NanumGothic-Bold.ttf
           resources:
             requests:
               cpu: 400m

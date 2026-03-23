@@ -93,6 +93,15 @@ spec:
             failureThreshold: 30
             periodSeconds: 5
           lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -lc
+                  - |
+                    mkdir -p /app/fonts
+                    ln -sf /usr/share/fonts/truetype/nanum/NanumGothic.ttf /app/fonts/NanumGothic-Regular.ttf
+                    ln -sf /usr/share/fonts/truetype/nanum/NanumGothicBold.ttf /app/fonts/NanumGothic-Bold.ttf
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
