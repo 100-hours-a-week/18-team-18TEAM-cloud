@@ -177,7 +177,7 @@ spec:
         property: TAVILY_API_KEY
     - secretKey: REDIS_URL
       remoteRef:
-        key: dev/ai-model
+        key: dev/fe
         property: REDIS_URL
     - secretKey: EMBEDDING_SERVICE_URL
       remoteRef:

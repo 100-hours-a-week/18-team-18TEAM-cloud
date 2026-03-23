@@ -38,6 +38,18 @@ spec:
         - protocol: TCP
           port: 8080
     - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod-ai-api
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ai-api
+              app.kubernetes.io/part-of: bizkit
+              environment: prod
+      ports:
+        - protocol: TCP
+          port: 8000
+    - to:
         - ipBlock:
             cidr: 10.0.4.37/32
       ports:

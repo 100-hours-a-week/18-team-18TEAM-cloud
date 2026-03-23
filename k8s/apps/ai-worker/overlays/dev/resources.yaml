@@ -66,8 +66,11 @@ spec:
                     environment: dev
       containers:
         - name: ai-worker
-          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-dev:dev-1.0.0-d9a8ef3
+          image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-dev:dev-1.0.0-af51b64
           imagePullPolicy: Always
+          command:
+            - python
+            - run_worker.py
           envFrom:
             - secretRef:
                 name: ai-worker-secret
@@ -108,41 +111,85 @@ spec:
   data:
     - secretKey: APP_ENV
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: APP_ENV
     - secretKey: VLLM_BASE_URL
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: VLLM_BASE_URL
     - secretKey: VLM_BASE_URL
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: VLM_BASE_URL
     - secretKey: RUNPOD_API_KEY
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: RUNPOD_API_KEY
     - secretKey: GITHUB_TOKEN
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: GITHUB_TOKEN
     - secretKey: TAVILY_API_KEY
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: TAVILY_API_KEY
+    - secretKey: TAVILY_API_KEY_2
+      remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        key: dev/ai-worker
+        property: TAVILY_API_KEY_2
+    - secretKey: RUNPOD_ENDPOINT_ID
+      remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        key: dev/ai-worker
+        property: RUNPOD_ENDPOINT_ID
     - secretKey: REDIS_URL
       remoteRef:
-        key: dev/ai-worker
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        key: dev/fe
         property: REDIS_URL
     - secretKey: EMBEDDING_SERVICE_URL
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: EMBEDDING_SERVICE_URL
     - secretKey: MILVUS_URI
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: MILVUS_URI
     - secretKey: MILVUS_TOKEN
       remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
         key: dev/ai-worker
         property: MILVUS_TOKEN

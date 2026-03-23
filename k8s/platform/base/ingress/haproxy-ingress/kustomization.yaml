@@ -10,3 +10,4 @@ resources:
   - websocket-ingress.yaml
   - dev-websocket-ingress.yaml
   - argocd-ingress.yaml
+  - kube-state-metrics-ingress.yaml

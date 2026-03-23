@@ -102,3 +102,18 @@ spec:
       default:
         cpu: "500m"
         memory: "512Mi"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: monitoring-default-limits
+  namespace: monitoring
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: "50m"
+        memory: "64Mi"
+      default:
+        cpu: "300m"
+        memory: "256Mi"
