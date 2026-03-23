@@ -67,6 +67,9 @@ spec:
         - name: ai-worker
           image: 027929308165.dkr.ecr.ap-northeast-2.amazonaws.com/bizkit-ai-prod:prod-1.0.0-deea488-11-1
           imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - run_worker.py
           envFrom:
             - secretRef:
                 name: ai-worker-secret

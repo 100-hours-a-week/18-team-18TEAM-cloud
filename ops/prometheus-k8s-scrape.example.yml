@@ -1,0 +1,55 @@
+# Copy the jobs below into /opt/monitoring/prometheus/prometheus.yml on ktb-prod-metric
+# and reload Prometheus after the Kubernetes monitoring exporters are live.
+
+- job_name: "k8s-kube-state-metrics"
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+        - "10.0.0.151:80"
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        source: "kubernetes"
+        exporter: "kube-state-metrics"
+        ingress_node: "ip-10-0-0-151"
+
+- job_name: "k8s-node-exporter"
+  static_configs:
+    - targets: ["10.0.2.41:9100"]
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        node: "bizkit-prod-k8s-cp-1"
+        source: "kubernetes"
+    - targets: ["10.0.2.140:9100"]
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        node: "bizkit-prod-k8s-app-1"
+        source: "kubernetes"
+    - targets: ["10.0.3.69:9100"]
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        node: "bizkit-prod-k8s-app-2"
+        source: "kubernetes"
+    - targets: ["10.0.3.39:9100"]
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        node: "bizkit-prod-k8s-dev-1"
+        source: "kubernetes"
+    - targets: ["10.0.0.151:9100"]
+      labels:
+        env: "prod"
+        cluster: "bizkit-prod-k8s"
+        node: "ip-10-0-0-151"
+        source: "kubernetes"
+
+# Important:
+# - kube-state-metrics is currently reachable through the HAProxy ingress node at 10.0.0.151:80.
+# - node-exporter targets below require SG/routing that allows ktb-prod-metric (10.0.6.253)
+#   to reach each node on TCP/9100.
+#
+# Optional next step:
+# Add BE/AI metrics jobs after you expose app metrics endpoints separately.

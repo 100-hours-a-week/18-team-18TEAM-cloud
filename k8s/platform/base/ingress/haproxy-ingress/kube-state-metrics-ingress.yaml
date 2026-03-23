@@ -1,0 +1,67 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kube-state-metrics-ingress
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: kube-state-metrics-ingress
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress
+  annotations:
+    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    haproxy-ingress.github.io/allowlist-source-range: "10.0.6.253/32"
+    haproxy-ingress.github.io/timeout-connect: "30s"
+    haproxy-ingress.github.io/timeout-http-request: "15s"
+    haproxy-ingress.github.io/timeout-keep-alive: "30s"
+    haproxy-ingress.github.io/timeout-server: "30s"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - http:
+        paths:
+          - path: /metrics
+            pathType: Exact
+            backend:
+              service:
+                name: kube-state-metrics
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kube-state-metrics-debug-ingress
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: kube-state-metrics-debug-ingress
+    app.kubernetes.io/part-of: bizkit
+    app.kubernetes.io/component: ingress
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: k8s-metrics.cardcaro.com
+    bizkit.io/git-sha: REPLACE_ME_GIT_SHA
+    bizkit.io/deployed-at: REPLACE_ME_DEPLOYED_AT
+    bizkit.io/deployed-by: REPLACE_ME_DEPLOYED_BY
+    haproxy-ingress.github.io/allowlist-source-range: "10.0.6.253/32,54.116.28.173/32,10.0.255.30/32"
+    haproxy-ingress.github.io/timeout-connect: "30s"
+    haproxy-ingress.github.io/timeout-http-request: "15s"
+    haproxy-ingress.github.io/timeout-keep-alive: "30s"
+    haproxy-ingress.github.io/timeout-server: "30s"
+spec:
+  ingressClassName: haproxy
+  tls:
+    - hosts:
+        - k8s-metrics.cardcaro.com
+      secretName: cardcaro-com-tls
+  rules:
+    - host: k8s-metrics.cardcaro.com
+      http:
+        paths:
+          - path: /metrics
+            pathType: Exact
+            backend:
+              service:
+                name: kube-state-metrics
+                port:
+                  number: 8080

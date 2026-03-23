@@ -153,19 +153,16 @@ spec:
   target:
     name: fe-secret
     creationPolicy: Owner
+    template:
+      mergePolicy: Merge
+      data:
+        SPRING_API_BASE_URL: http://be.dev.svc.cluster.local:8080/api
+        AI_API_BASE_URL: http://ai-api.dev.svc.cluster.local:8000
   data:
     - secretKey: APP_ENV
       remoteRef:
         key: dev/fe
         property: APP_ENV
-    - secretKey: SPRING_API_BASE_URL
-      remoteRef:
-        key: dev/fe
-        property: SPRING_API_BASE_URL
-    - secretKey: AI_API_BASE_URL
-      remoteRef:
-        key: dev/fe
-        property: AI_API_BASE_URL
     - secretKey: REDIS_URL
       remoteRef:
         key: dev/fe
